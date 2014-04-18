@@ -1,6 +1,4 @@
 package astronomy;
-import java.awt.*;
-import java.swing.*;
 
 /*
   Authors:  Gavin Golden, Mark Gudorf, Victoria McIe, Cooper Riley
@@ -8,6 +6,6 @@ import java.swing.*;
   Assignment: Astronomy Quiz
   Instructor: Dr. Inclezan
 */
-public class QuizFrame extends JFrame {
+public class AstroQuiz {
 
 }
