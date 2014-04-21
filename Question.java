@@ -1,5 +1,3 @@
-package astronomy;
-
 /*
   Authors:  Gavin Golden, Mark Gudorf, Victoria McIe, Cooper Riley
   Class: CSE 385
@@ -17,10 +15,14 @@ public abstract class Question {
         this.text = text;
     }
 
+    public Question(Question quest){
+        this.text = quest.text;
+    }
+
     /*
       @return the text of the question
     */
-    public String toString(){
+    public String getText(){
         return text;
     }
 
