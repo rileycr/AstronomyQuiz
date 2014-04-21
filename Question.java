@@ -15,6 +15,9 @@ public abstract class Question {
         this.text = text;
     }
 
+    /*
+      Copy Constructor
+    */
     public Question(Question quest){
         this.text = quest.text;
     }

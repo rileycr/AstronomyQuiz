@@ -42,6 +42,7 @@ public class AstroQuiz {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery("SELECT Name FROM PLANET");
             while(result.next()){
+                
                 System.out.println(result.getString("Name"));
             }
             
