@@ -46,9 +46,8 @@ public class AstroQuiz {
      */
     public AstroQuiz() {
     	
-    	for(int i = 0; i < 20; i++) {
-    		System.out.println(randomObj());
-    	}
+    	ResultSet rs = execQuery("SELECT * FROM Star");
+    	
     	/*
     	 * getPlayerName();
          dbConnect();
@@ -131,7 +130,7 @@ public class AstroQuiz {
     	
     	String query = ("SELECT * FROM " + name);
     	
-    	ResultSet rs = new Query().execQuery(stmt, query);
+    	ResultSet rs = execQuery(query);
     	
     	int rows = 0;
     	try {
@@ -161,6 +160,21 @@ public class AstroQuiz {
     	return randName;
     	
     }
+    
+    
+    private ResultSet execQuery(String query) {
+    	ResultSet result = null;
+        try {
+            result = stmt.executeQuery(query);
+        } catch (Exception e) {
+            System.out.println("Error: failed to execute query.\\n" + e.getMessage());
+        }
+	
+        return result;
+    }
+    
+    
+    
     
     /**
      Create main GUI frame and enclosed objects.

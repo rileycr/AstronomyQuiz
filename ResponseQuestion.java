@@ -5,7 +5,7 @@
   Instructor: Dr. Inclezan
 */
 
-public class ResponseQuestion {
+public class ResponseQuestion extends Question {
 
     /*
       Constructor
