@@ -1,6 +1,5 @@
 import java.sql.*;
 import java.awt.*;
-
 import javax.swing.*;
 
 
@@ -170,10 +169,7 @@ public class AstroQuiz {
     }
     
     private void showQuestions() {
-        
-    	
-    	Query q = new Query();
-        
+        Query q = new Query();
     }
     
     /**

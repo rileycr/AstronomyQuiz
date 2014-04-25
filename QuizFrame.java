@@ -1,4 +1,3 @@
-package astronomy;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -168,6 +167,8 @@ public class QuizFrame extends JFrame {
         public void actionPerformed(ActionEvent e){
             if (e.getSource().equals(submitButton)){
                 response = responseField.getText();
+            } else if(e.getSource().equals(quitButton)){
+                System.exit(0);
             }
         }
     }
