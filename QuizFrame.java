@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 /*
@@ -15,16 +16,24 @@ public class QuizFrame extends JFrame {
     private static int screenHeight;
     private JTextPane questionPane;
     private JPanel buttonPanel;
+    private JButton submitButton;
+    private JButton quitButton;
         
     //Make these ArrayLists? OR have the arraylists in AstroQuiz
     private Question question;
     private String response;
-    
+
+    /*
+      Constructor
+    */
     public QuizFrame(String player){
         super(player + "'s Astronomy Quiz");
         setupGUI();
     }
 
+    /*
+      Default constructor
+    */
     public QuizFrame() {
         this("");
     }
@@ -38,7 +47,13 @@ public class QuizFrame extends JFrame {
         boolean mcQuestion = (newQuestion instanceof MCQuestion);
         responseField.setVisible(mcQuestion);
         buttonPanel.setVisible(!mcQuestion);
+    }
 
+    /*
+      @return the response from the user
+    */
+    public String getResponse(){
+        return response;
     }
 
     //For testing purposes
@@ -65,10 +80,10 @@ public class QuizFrame extends JFrame {
         southPanel.setEnabled(false);
         getContentPane().add(southPanel, BorderLayout.SOUTH);
         
-        JButton submitButton = new JButton("Submit");
+        submitButton = new JButton("Submit");
         southPanel.setRightComponent(submitButton);
         
-        JButton quitButton = new JButton("Quit");
+        quitButton = new JButton("Quit");
         southPanel.setLeftComponent(quitButton);
 
         //Info for the user (how far along they are)
@@ -146,5 +161,13 @@ public class QuizFrame extends JFrame {
         centerPanel.add(responseField);
         responseField.setColumns(10);
         setVisible(true);
+    }
+
+    public class ButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e){
+            if (e.getSource().equals(submitButton)){
+                response = responseField.getText();
+            }
+        }
     }
 }

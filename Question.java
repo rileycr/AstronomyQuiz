@@ -1,5 +1,3 @@
-package astronomy;
-
 import java.awt.Button;
 
 /*

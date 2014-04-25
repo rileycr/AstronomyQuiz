@@ -1,5 +1,3 @@
-package astronomy;
-
 import java.sql.*;
 import java.awt.*;
 import javax.swing.*;
