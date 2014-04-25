@@ -29,6 +29,26 @@ public class QuizFrame extends JFrame {
         this("");
     }
 
+    /*
+      Change the question to be displayed
+    */
+    public void editQuestion(Question newQuestion){
+        questionPane.setText(newQuestion.getText());
+        
+        boolean mcQuestion = (newQuestion instanceof MCQuestion);
+        responseField.setVisible(mcQuestion);
+        buttonPanel.setVisible(!mcQuestion);
+
+    }
+
+    //For testing purposes
+    public static void main(String[] args) {
+        QuizFrame test = new QuizFrame("Cooper");
+    }
+
+    /*
+      Draws the GUI
+    */
     public void setupGUI(){
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         screenWidth = screenSize.width;
@@ -126,22 +146,5 @@ public class QuizFrame extends JFrame {
         centerPanel.add(responseField);
         responseField.setColumns(10);
         setVisible(true);
-    }
-    
-    /*
-      Change the question to be displayed
-    */
-    public void editQuestion(Question newQuestion){
-        questionPane.setText(newQuestion.getText());
-        
-        boolean mcQuestion = (newQuestion instanceof MCQuestion);
-        responseField.setVisible(mcQuestion);
-        buttonPanel.setVisible(!mcQuestion);
-
-    }
-
-    //For testing purposes
-    public static void main(String[] args) {
-        QuizFrame test = new QuizFrame("Cooper");
     }
 }
