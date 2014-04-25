@@ -1,3 +1,4 @@
+@@ -1,207 +0,0 @@
 import java.sql.*;
 import java.awt.*;
 import javax.swing.*;
@@ -178,7 +179,7 @@ public class AstroQuiz {
             System.out.println("Error: execQuery\n");
             e.printStackTrace();
         }
-	
+        
         return result;
     }
     
