@@ -1,5 +1,6 @@
 import java.sql.*;
 import java.awt.*;
+
 import javax.swing.*;
 
 
@@ -16,6 +17,7 @@ public class AstroQuiz {
     private String playerName;
     private Connection connection;
     private Statement stmt;
+    private int qCount = 0;		// running count of the question
     
     private String allText[] = new String[] {
     "Name two planets that orbit the Sun.",
@@ -30,6 +32,10 @@ public class AstroQuiz {
     "What stars are in Orion’s Belt?",
     "__(Star)__ is in __(Galaxy)__ (T/F)"
     };
+    final int NUM_Q = allText.length;
+    
+    public Question allQuestions[] = new Question[NUM_Q];
+    
     
     /***************************************************************************/
     
@@ -39,10 +45,17 @@ public class AstroQuiz {
      * Creates and launches the AstroQuiz application
      */
     public AstroQuiz() {
-    	getPlayerName();
-    	dbConnect();
-    	guiStart();
-    	showQuestions();
+    	
+    	for(int i = 0; i < 20; i++) {
+    		System.out.println(randomObj());
+    	}
+    	/*
+    	 * getPlayerName();
+         dbConnect();
+         //createQuestions();
+         guiStart();
+         showQuestions();
+         */
     }
     
     /**
@@ -51,7 +64,7 @@ public class AstroQuiz {
     private void getPlayerName() {
     	playerName = JOptionPane.showInputDialog("Welcome! Please enter your name");
     }
-        
+    
     /**
      Connects to our database and allows for questions to be
      generated, queries made and results to be shown
@@ -72,6 +85,83 @@ public class AstroQuiz {
         }
     }
     
+    
+    private void createQuestions() {
+    	
+    	allQuestions[0] = new ResponseQuestion(allText[0]);
+    	allQuestions[1] = new ResponseQuestion(allText[1]);
+    	allQuestions[2] = new ResponseQuestion(allText[2]);
+    	//allQuestions[3] = new MCQuestion(allText[3]);
+    	//allQuestions[4] = new MCQuestion(allText[4]);
+    	allQuestions[5] = new ResponseQuestion(allText[5]);
+    	allQuestions[6] = new ResponseQuestion(allText[6]);
+    	allQuestions[7] = new ResponseQuestion(allText[7]);
+    	allQuestions[8] = new ResponseQuestion(allText[8]);
+    	allQuestions[9] = new ResponseQuestion(allText[9]);
+    	allQuestions[10] = new ResponseQuestion(allText[10]);
+    	allQuestions[11] = new ResponseQuestion(allText[11]);
+    }
+    
+    private String randomObj() {
+    	int randTable = (int)Math.random() * 100 % 6;
+    	String name;
+    	
+    	switch(randTable){
+            case 0:
+                name = "Planet";
+                break;
+            case 1:
+                name = "Moon";
+                break;
+            case 2:
+                name = "Star";
+                break;
+            case 3:
+                name = "Galaxy";
+                break;
+            case 4:
+                name = "Asteroid";
+                break;
+            case 5:
+                name = "Comet";
+                break;
+            default:
+                name = "Star";
+    	}
+    	
+    	String query = ("SELECT * FROM " + name);
+    	
+    	ResultSet rs = new Query().execQuery(stmt, query);
+    	
+    	int rows = 0;
+    	try {
+    		if (rs.last()) {
+    			rows = rs.getRow();
+    			// Move to beginning
+    			rs.beforeFirst();
+    		} else {
+    			System.out.println("Error: Empty Set");
+    			System.exit(-1);
+    		}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+    	String randName = "";
+    	
+    	int rand = ((int)Math.random() * 100 % rows) + 1;
+    	try {
+    		for(int i = 0; (i < rows && rs.next()); i++) {
+    			randName = rs.getString("Name");
+    		}
+		} catch (SQLException e) {
+			System.out.println("Error generating random query.");
+			e.printStackTrace();
+		}
+    	return randName;
+    	
+    }
+    
     /**
      Create main GUI frame and enclosed objects.
      */
@@ -80,10 +170,12 @@ public class AstroQuiz {
     }
     
     private void showQuestions() {
-        Query query = new Query();
-        //Question question = new Question();
+        
+    	
+    	Query q = new Query();
+        
     }
-
+    
     /**
      * PROGRAM LAUNCH.
      */
