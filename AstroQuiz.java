@@ -85,7 +85,7 @@ public class AstroQuiz {
     
     private void showQuestions() {
         Query query = new Query();
-        Question question = new Question();
+        //Question question = new Question();
     }
     
     

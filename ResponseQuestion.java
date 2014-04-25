@@ -11,13 +11,13 @@ public class ResponseQuestion {
       Constructor
     */
     public ResponseQuestion(String text){
-        super(text);
+        //super(text);
     }
 
     /*
       @return if the response is correct
     */
     public boolean isCorrect(String response){
-
+    	return true;
     }
 }
