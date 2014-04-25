@@ -13,7 +13,9 @@ public class QuizFrame extends JFrame {
     private JTextField responseField;
     private static int screenWidth;
     private static int screenHeight;
-    
+    private JTextPane questionPane;
+    private JPanel buttonPanel;
+        
     //Make these ArrayLists? OR have the arraylists in AstroQuiz
     private Question question;
     private String response;
@@ -34,7 +36,7 @@ public class QuizFrame extends JFrame {
         setSize(new Dimension(500, 430));
         setLocation(screenWidth / 2 - getWidth() / 2, screenHeight / 2 - getHeight() / 2);
         setResizable(false);
-        setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Cooper\\Documents\\GitHub\\astronomy\\GUI icon.png"));
+        setIconImage(Toolkit.getDefaultToolkit().getImage("GUI icon.png"));
 		
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -78,7 +80,7 @@ public class QuizFrame extends JFrame {
         SpringLayout centerLayout = new SpringLayout();
         centerPanel.setLayout(centerLayout);
         
-        JTextPane questionPane = new JTextPane();
+        questionPane = new JTextPane();
         centerLayout.putConstraint(SpringLayout.NORTH, questionPane, 0, SpringLayout.NORTH, centerPanel);
         centerLayout.putConstraint(SpringLayout.WEST, questionPane, 0, SpringLayout.WEST, centerPanel);
         centerLayout.putConstraint(SpringLayout.SOUTH, questionPane, 264, SpringLayout.NORTH, centerPanel);
@@ -94,7 +96,7 @@ public class QuizFrame extends JFrame {
         centerLayout.putConstraint(SpringLayout.EAST, extraPanel, 0, SpringLayout.EAST, centerPanel);
         centerPanel.add(extraPanel);
         
-        JPanel buttonPanel = new JPanel();
+        buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.WHITE);
         centerPanel.add(buttonPanel);
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -130,7 +132,12 @@ public class QuizFrame extends JFrame {
       Change the question to be displayed
     */
     public void editQuestion(Question newQuestion){
+        questionPane.setText(newQuestion.getText());
         
+        boolean mcQuestion = (newQuestion instanceof MCQuestion);
+        responseField.setVisible(mcQuestion);
+        buttonPanel.setVisible(!mcQuestion);
+
     }
 
     //For testing purposes
