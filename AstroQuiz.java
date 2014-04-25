@@ -45,15 +45,14 @@ public class AstroQuiz {
      */
     public AstroQuiz() {
     	
-    	ResultSet rs = execQuery("SELECT * FROM Star");
     	
-    	/*
-    	 * getPlayerName();
+    	
+    	 getPlayerName();
          dbConnect();
          //createQuestions();
          guiStart();
-         showQuestions();
-         */
+        
+        
     }
     
     /**
@@ -183,7 +182,7 @@ public class AstroQuiz {
     }
     
     private void showQuestions() {
-        Query q = new Query();
+        
     }
     
     /**

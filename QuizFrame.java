@@ -1,5 +1,3 @@
-@@ -1,175 +0,0 @@
-
 import java.awt.*;
 import java.awt.event.*;
 
@@ -25,12 +23,14 @@ public class QuizFrame extends JFrame {
     //Make these ArrayLists? OR have the arraylists in AstroQuiz
     private Question question;
     private String response;
+    private ButtonListener bListen;
     
     /*
      Constructor
      */
     public QuizFrame(String player){
         super(player + "'s Astronomy Quiz");
+        bListen = new ButtonListener();
         setupGUI();
     }
     
@@ -85,9 +85,11 @@ public class QuizFrame extends JFrame {
         
         submitButton = new JButton("Submit");
         southPanel.setRightComponent(submitButton);
+        submitButton.addActionListener(bListen);
         
         quitButton = new JButton("Quit");
         southPanel.setLeftComponent(quitButton);
+        quitButton.addActionListener(bListen);
         
         //Info for the user (how far along they are)
         JPanel northPanel = new JPanel();
@@ -141,15 +143,19 @@ public class QuizFrame extends JFrame {
         
         JButton choiceA = new JButton("A");
         buttonPanel.add(choiceA);
+        choiceA.addActionListener(bListen);
         
         JButton choiceB = new JButton("B");
         buttonPanel.add(choiceB);
+        choiceB.addActionListener(bListen);
         
         JButton choiceC = new JButton("C");
         buttonPanel.add(choiceC);
+        choiceC.addActionListener(bListen);
         
         JButton choiceD = new JButton("D");
         buttonPanel.add(choiceD);
+        choiceD.addActionListener(bListen);
         
         responseField = new JTextField();
         centerLayout.putConstraint(SpringLayout.NORTH, buttonPanel, 14, SpringLayout.NORTH, responseField);
@@ -170,6 +176,8 @@ public class QuizFrame extends JFrame {
         public void actionPerformed(ActionEvent e){
             if (e.getSource().equals(submitButton)){
                 response = responseField.getText();
+            } else if (e.getSource().equals(quitButton)){
+                System.exit(0);
             }
         }
     }
