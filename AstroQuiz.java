@@ -1,4 +1,3 @@
-@@ -1,207 +0,0 @@
 import java.sql.*;
 import java.awt.*;
 import javax.swing.*;
@@ -63,6 +62,8 @@ public class AstroQuiz {
          guiStart();
          showQuestions();
          */
+    	
+    	connection.close();
     }
     
     /**
