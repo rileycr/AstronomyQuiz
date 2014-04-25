@@ -12,18 +12,18 @@ import javax.swing.*;
 public class QuizFrame extends JFrame {
     
     private String displayedQuestion;
-    private JTextField responseField;
     private static int screenWidth;
     private static int screenHeight;
-    private JTextPane questionPane;
     private JPanel buttonPanel;
+    private JTextPane questionPane;
+    private JTextField responseField;
     private JButton submitButton;
     private JButton quitButton;
+    private ButtonListener bListen;
     
     //Make these ArrayLists? OR have the arraylists in AstroQuiz
     private Question question;
     private String response;
-    private ButtonListener bListen;
     
     /*
      Constructor
@@ -62,6 +62,19 @@ public class QuizFrame extends JFrame {
     //For testing purposes
     public static void main(String[] args) {
         QuizFrame test = new QuizFrame("Cooper");
+    }
+
+    /*
+      Subclass that listens to all the buttons in the GUI
+    */
+    public class ButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e){
+            if (e.getSource().equals(submitButton)){
+                response = responseField.getText();
+            } else if (e.getSource().equals(quitButton)){
+                System.exit(0);
+            }
+        }
     }
     
     /*
@@ -172,13 +185,4 @@ public class QuizFrame extends JFrame {
         setVisible(true);
     }
     
-    public class ButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent e){
-            if (e.getSource().equals(submitButton)){
-                response = responseField.getText();
-            } else if (e.getSource().equals(quitButton)){
-                System.exit(0);
-            }
-        }
-    }
 }
