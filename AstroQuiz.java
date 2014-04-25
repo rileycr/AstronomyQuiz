@@ -11,7 +11,7 @@ import javax.swing.*;
  */
 public class AstroQuiz {
 	
-	/******************		Member Variables	********************************/
+    /******************		Member Variables	********************************/
 	
     private String playerName;
     private Connection connection;
@@ -31,7 +31,7 @@ public class AstroQuiz {
     "__(Star)__ is in __(Galaxy)__ (T/F)"
     };
     
-	/***************************************************************************/
+    /***************************************************************************/
     
     /**
      * Main Constructor
@@ -51,8 +51,7 @@ public class AstroQuiz {
     private void getPlayerName() {
     	playerName = JOptionPane.showInputDialog("Welcome! Please enter your name");
     }
-    
-    
+        
     /**
      Connects to our database and allows for questions to be
      generated, queries made and results to be shown
@@ -60,16 +59,16 @@ public class AstroQuiz {
     private void dbConnect() {
         
         try {
-        	Class.forName("org.sqlite.JDBC");
-        	connection = null;
-        	stmt = null;
-        	
+            Class.forName("org.sqlite.JDBC");
+            connection = null;
+            stmt = null;
+            
             connection = DriverManager.getConnection("jdbc:sqlite:385Project.db");
             stmt = connection.createStatement();
         } catch (ClassNotFoundException e){
             System.err.println("Class Not found: org.sqlite.JDBC\n" + e.getMessage());
         } catch (SQLException e) {
-        	System.err.println("SQLException: \n" + e.getMessage());
+            System.err.println("SQLException: \n" + e.getMessage());
         }
     }
     
@@ -80,16 +79,11 @@ public class AstroQuiz {
         QuizFrame test = new QuizFrame(playerName);
     }
     
-    
-    
-    
     private void showQuestions() {
         Query query = new Query();
         //Question question = new Question();
     }
-    
-    
-    
+
     /**
      * PROGRAM LAUNCH.
      */
