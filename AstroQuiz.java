@@ -1,4 +1,3 @@
-@@ -1,207 +0,0 @@
 import java.sql.*;
 import java.awt.*;
 import javax.swing.*;
@@ -44,10 +43,15 @@ public class AstroQuiz {
      * Creates and launches the AstroQuiz application
      */
     public AstroQuiz() {
-    	
+        
+        //getPlayerName();
+        dbConnect();
+        //createQuestions();
+        // guiStart();
+        //showQuestions();
     	try {
     		ResultSet rs = execQuery("SELECT * FROM Star");
-    		if(rs.next()) {
+    		while(rs.next()) {
     			System.out.println(rs.getString("Name"));
     		}
     	} catch (Exception e) {
@@ -56,13 +60,9 @@ public class AstroQuiz {
     	
     	
     	
-    	/*
-    	 * getPlayerName();
-         dbConnect();
-         //createQuestions();
-         guiStart();
-         showQuestions();
-         */
+    	
+    	
+         
     }
     
     /**
