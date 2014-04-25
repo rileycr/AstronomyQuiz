@@ -1,3 +1,4 @@
+@@ -1,175 +0,0 @@
 
 import java.awt.*;
 import java.awt.event.*;
@@ -5,13 +6,13 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /*
-  Authors:  Gavin Golden, Mark Gudorf, Victoria McIe, Cooper Riley
-  Class: CSE 385
-  Assignment: Astronomy Quiz
-  Instructor: Dr. Inclezan
-*/
+ Authors:  Gavin Golden, Mark Gudorf, Victoria McIe, Cooper Riley
+ Class: CSE 385
+ Assignment: Astronomy Quiz
+ Instructor: Dr. Inclezan
+ */
 public class QuizFrame extends JFrame {
-
+    
     private String displayedQuestion;
     private JTextField responseField;
     private static int screenWidth;
@@ -20,29 +21,29 @@ public class QuizFrame extends JFrame {
     private JPanel buttonPanel;
     private JButton submitButton;
     private JButton quitButton;
-        
+    
     //Make these ArrayLists? OR have the arraylists in AstroQuiz
     private Question question;
     private String response;
-
+    
     /*
-      Constructor
-    */
+     Constructor
+     */
     public QuizFrame(String player){
         super(player + "'s Astronomy Quiz");
         setupGUI();
     }
-
+    
     /*
-      Default constructor
-    */
+     Default constructor
+     */
     public QuizFrame() {
         this("");
     }
-
+    
     /*
-      Change the question to be displayed
-    */
+     Change the question to be displayed
+     */
     public void editQuestion(Question newQuestion){
         questionPane.setText(newQuestion.getText());
         
@@ -50,22 +51,22 @@ public class QuizFrame extends JFrame {
         responseField.setVisible(mcQuestion);
         buttonPanel.setVisible(!mcQuestion);
     }
-
+    
     /*
-      @return the response from the user
-    */
+     @return the response from the user
+     */
     public String getResponse(){
         return response;
     }
-
+    
     //For testing purposes
     public static void main(String[] args) {
         QuizFrame test = new QuizFrame("Cooper");
     }
-
+    
     /*
-      Draws the GUI
-    */
+     Draws the GUI
+     */
     public void setupGUI(){
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         screenWidth = screenSize.width;
@@ -76,7 +77,7 @@ public class QuizFrame extends JFrame {
         setIconImage(Toolkit.getDefaultToolkit().getImage("GUI icon.png"));
 		
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+        
         //The bottom buttons
         JSplitPane southPanel = new JSplitPane();
         southPanel.setEnabled(false);
@@ -87,13 +88,13 @@ public class QuizFrame extends JFrame {
         
         quitButton = new JButton("Quit");
         southPanel.setLeftComponent(quitButton);
-
+        
         //Info for the user (how far along they are)
         JPanel northPanel = new JPanel();
         FlowLayout flowLayout = (FlowLayout) northPanel.getLayout();
         flowLayout.setHgap(0);
         getContentPane().add(northPanel, BorderLayout.NORTH);
-
+        
         //Input box
         JTextArea txtrQuestionOf = new JTextArea();
         txtrQuestionOf.setText("Question _ of 10                   ");
@@ -110,7 +111,7 @@ public class QuizFrame extends JFrame {
         
         JPanel eastPanel = new JPanel();
         getContentPane().add(eastPanel, BorderLayout.EAST);
-
+        
         //Main info panel with question, options and a space for something else (suggestions?)
         JPanel centerPanel = new JPanel();
         getContentPane().add(centerPanel, BorderLayout.CENTER);
@@ -164,7 +165,7 @@ public class QuizFrame extends JFrame {
         responseField.setColumns(10);
         setVisible(true);
     }
-
+    
     public class ButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e){
             if (e.getSource().equals(submitButton)){
