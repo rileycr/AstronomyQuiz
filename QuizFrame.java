@@ -1,5 +1,3 @@
-@@ -1,175 +0,0 @@
-
 import java.awt.*;
 import java.awt.event.*;
 

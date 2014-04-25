@@ -14,8 +14,7 @@ public class AstroQuiz {
     /******************		Member Variables	********************************/
 	
     private String playerName;
-    private Connection connection;
-    private Statement stmt;
+    public static Connection connection;
     private int qCount = 0;		// running count of the question
     
     private String allText[] = new String[] {
@@ -45,7 +44,16 @@ public class AstroQuiz {
      */
     public AstroQuiz() {
     	
-    	ResultSet rs = execQuery("SELECT * FROM Star");
+    	try {
+    		ResultSet rs = execQuery("SELECT * FROM Star");
+    		if(rs.next()) {
+    			System.out.println(rs.getString("Name"));
+    		}
+    	} catch (Exception e) {
+    		System.out.println("Not working");
+    	}
+    	
+    	
     	
     	/*
     	 * getPlayerName();
@@ -72,10 +80,8 @@ public class AstroQuiz {
         try {
             Class.forName("org.sqlite.JDBC");
             connection = null;
-            stmt = null;
             
             connection = DriverManager.getConnection("jdbc:sqlite:385Project.db");
-            stmt = connection.createStatement();
         } catch (ClassNotFoundException e){
             System.err.println("Class Not found: org.sqlite.JDBC\n" + e.getMessage());
         } catch (SQLException e) {
@@ -163,10 +169,14 @@ public class AstroQuiz {
     
     private ResultSet execQuery(String query) {
     	ResultSet result = null;
+    	Statement stmt;
         try {
+        	stmt = connection.createStatement();
+        	stmt.setQueryTimeout(10);
             result = stmt.executeQuery(query);
         } catch (Exception e) {
-            System.out.println("Error: failed to execute query.\\n" + e.getMessage());
+            System.out.println("Error: execQuery\n");
+            e.printStackTrace();
         }
 	
         return result;
@@ -183,7 +193,7 @@ public class AstroQuiz {
     }
     
     private void showQuestions() {
-        Query q = new Query();
+        
     }
     
     /**
