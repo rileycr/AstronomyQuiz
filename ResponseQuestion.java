@@ -11,7 +11,7 @@ public class ResponseQuestion extends Question {
       Constructor
     */
     public ResponseQuestion(String text){
-        //super(text);
+        super(text);
     }
 
     /*

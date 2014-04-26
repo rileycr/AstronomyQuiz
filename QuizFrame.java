@@ -142,13 +142,15 @@ public class QuizFrame extends JFrame {
         questionPane.setFont(new Font("Tahoma", Font.PLAIN, 16));
         questionPane.setText("Test question?\nA. Apples\nB. Bananas");
         centerPanel.add(questionPane);
-        
+
+        //A panel to add extra items in the future
         JPanel extraPanel = new JPanel();
         centerLayout.putConstraint(SpringLayout.NORTH, extraPanel, 0, SpringLayout.NORTH, centerPanel);
         centerLayout.putConstraint(SpringLayout.WEST, extraPanel, -223, SpringLayout.EAST, centerPanel);
         centerLayout.putConstraint(SpringLayout.EAST, extraPanel, 0, SpringLayout.EAST, centerPanel);
         centerPanel.add(extraPanel);
-        
+
+        //The panel to contain the multiple choice buttons
         buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.WHITE);
         centerPanel.add(buttonPanel);
@@ -169,7 +171,8 @@ public class QuizFrame extends JFrame {
         JButton choiceD = new JButton("D");
         buttonPanel.add(choiceD);
         choiceD.addActionListener(bListen);
-        
+
+        //For the user to enter Response Question answers
         responseField = new JTextField();
         centerLayout.putConstraint(SpringLayout.NORTH, buttonPanel, 14, SpringLayout.NORTH, responseField);
         centerLayout.putConstraint(SpringLayout.WEST, buttonPanel, 25, SpringLayout.WEST, responseField);

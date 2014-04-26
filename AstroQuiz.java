@@ -10,7 +10,7 @@ import javax.swing.*;
  */
 public class AstroQuiz {
 	
-    /******************		Member Variables	********************************/
+    /******************		Member Variables	*************************/
 	
     private String playerName;
     public static Connection connection;
@@ -50,6 +50,7 @@ public class AstroQuiz {
         //createQuestions();
 
         //Testing database connection
+        System.out.println("\nTesting connection with SELECT statement\n");
     	try {
             ResultSet rs = execQuery("SELECT * FROM Star");
             while(rs.next()) {
@@ -161,8 +162,10 @@ public class AstroQuiz {
     	return randName;
     	
     }
-    
-    
+
+    /*
+      @return Computes the result set for a query
+    */
     private ResultSet execQuery(String query) {
     	ResultSet result = null;
     	Statement stmt;
@@ -177,9 +180,6 @@ public class AstroQuiz {
         
         return result;
     }
-    
-    
-    
     
     /**
      Create main GUI frame and enclosed objects.

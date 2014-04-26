@@ -9,26 +9,25 @@ import java.awt.Button;
 
 public abstract class Question {
 	
-	/******************		Member Variables	********************************/
+    /******************		Member Variables	*************************/
 	
-	private static int qCount = 0;		// running count of the question
-	
-	private String text;				// used to display the question text
-    private ClickListener submitted;	// listen for submit button pressed
-    private int qNum;					// identifies each unique question
+    private static int qCount = 0;	// running count of the question
+    
+    private String text;	      	// used to display the question text
+    private int qNum;			// identifies each unique question
     
     private static String allText[] = new String[] {
-    "Name two planets that orbit the Sun.",
-    "What are the 3 different types of galaxies?",
-    "What is the mass of ____?",
-    "Which planet is more massive? (Multiple choice)",
-    "Which star has the most planets orbiting it? (Multiple choice)",
-    "What is the name of the supercluster Earth is in?",
-    "True or false? Neptune is larger than Saturn. --- FALSE",
-    "Phobos and Deimos are moons of what planet? --- MARS",
-    "Triton is the largest moon of what planet? -- Neptune",
-    "What stars are in Orion’s Belt?",
-    "__(Star)__ is in __(Galaxy)__ (T/F)"	//****
+        "Name two planets that orbit the Sun.",
+        "What are the 3 different types of galaxies?",
+        "What is the mass of ____?",
+        "Which planet is more massive? (Multiple choice)",
+        "Which star has the most planets orbiting it? (Multiple choice)",
+        "What is the name of the supercluster Earth is in?",
+        "True or false? Neptune is larger than Saturn. --- FALSE",
+        "Phobos and Deimos are moons of what planet? --- MARS",
+        "Triton is the largest moon of what planet? -- Neptune",
+        "What stars are in Orion’s Belt?",
+        "__(Star)__ is in __(Galaxy)__ (T/F)"
     };
     
     public final static int NUM_QUESTIONS= allText.length;
@@ -56,9 +55,13 @@ public abstract class Question {
         this.text = quest.text;
         this.qNum = quest.qNum;
     }
+
+    public Question(String text){
+        this.text = text;
+    }
     
     /**
-     @return the text of the question
+     *@return the text of the question
      */
     public String getText(){
         return text;
