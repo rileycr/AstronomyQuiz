@@ -53,7 +53,7 @@ public class AstroQuiz {
         System.out.println("\nTesting connection with SELECT statement\n");
     	try {
             ResultSet rs = execQuery("SELECT * FROM Star");
-            if(rs.next()) {
+            while(rs.next()) {
                 System.out.println(rs.getString("Name"));
             }
     	} catch (Exception e) {
