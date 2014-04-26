@@ -86,7 +86,6 @@ public class AstroQuiz {
         }
     }
     
-    
     private void createQuestions() {
     	
     	allQuestions[0] = new ResponseQuestion(allText[0]);
@@ -196,7 +195,13 @@ public class AstroQuiz {
      * PROGRAM LAUNCH.
      */
     public static void main(String[] args){
-    	
+        try {
+            // Set System L&F
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (Exception e){
+            System.err.println(e.getMessage());
+        }
         new AstroQuiz();
     }
     
