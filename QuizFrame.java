@@ -110,15 +110,17 @@ public class QuizFrame extends JFrame {
         getContentPane().add(northPanel, BorderLayout.NORTH);
         
         //Input box
-        JTextArea txtrQuestionOf = new JTextArea();
-        txtrQuestionOf.setText("Question _ of 10                   ");
-        txtrQuestionOf.setEditable(false);
-        northPanel.add(txtrQuestionOf);
+        JTextArea infoQuestionProgress = new JTextArea();
+        infoQuestionProgress.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        infoQuestionProgress.setText("Question _ of 10\t\t");
+        infoQuestionProgress.setEditable(false);
+        northPanel.add(infoQuestionProgress);
         
-        JTextArea txtrCorrectSo = new JTextArea();
-        txtrCorrectSo.setEditable(false);
-        txtrCorrectSo.setText("     __% Correct so far");
-        northPanel.add(txtrCorrectSo);
+        JTextArea infoAccuracy = new JTextArea();
+        infoAccuracy.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        infoAccuracy.setEditable(false);
+        infoAccuracy.setText("\t__% Correct so far");
+        northPanel.add(infoAccuracy);
         
         JPanel westPanel = new JPanel();
         getContentPane().add(westPanel, BorderLayout.WEST);
