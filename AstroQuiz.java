@@ -2,7 +2,6 @@ import java.sql.*;
 import java.awt.*;
 import javax.swing.*;
 
-
 /*
  Authors:  Gavin Golden, Mark Gudorf, Victoria McIe, Cooper Riley
  Class: CSE 385
@@ -43,7 +42,6 @@ public class AstroQuiz {
      * Creates and launches the AstroQuiz application
      */
     public AstroQuiz() {
-<<<<<<< HEAD
         
         getPlayerName();
         dbConnect();
@@ -53,29 +51,14 @@ public class AstroQuiz {
 
         //Testing database connection
         System.out.println("\nTesting connection with SELECT statement\n");
-=======
-    	
->>>>>>> fe3f78f73e0402c4128888dc184d983e7bdef321
     	try {
-    		ResultSet rs = execQuery("SELECT * FROM Star");
-    		if(rs.next()) {
-    			System.out.println(rs.getString("Name"));
-    		}
+            ResultSet rs = execQuery("SELECT * FROM Star");
+            if(rs.next()) {
+                System.out.println(rs.getString("Name"));
+            }
     	} catch (Exception e) {
-    		System.out.println("Not working");
+            System.out.println("Not working");
     	}
-    	
-    	
-    	
-    	/*
-    	 * getPlayerName();
-         dbConnect();
-         //createQuestions();
-         guiStart();
-         showQuestions();
-         */
-    	
-    	connection.close();
     }
     
     /**
@@ -125,26 +108,26 @@ public class AstroQuiz {
     	String name;
     	
     	switch(randTable){
-            case 0:
-                name = "Planet";
-                break;
-            case 1:
-                name = "Moon";
-                break;
-            case 2:
-                name = "Star";
-                break;
-            case 3:
-                name = "Galaxy";
-                break;
-            case 4:
-                name = "Asteroid";
-                break;
-            case 5:
-                name = "Comet";
-                break;
-            default:
-                name = "Star";
+        case 0:
+            name = "Planet";
+            break;
+        case 1:
+            name = "Moon";
+            break;
+        case 2:
+            name = "Star";
+            break;
+        case 3:
+            name = "Galaxy";
+            break;
+        case 4:
+            name = "Asteroid";
+            break;
+        case 5:
+            name = "Comet";
+            break;
+        default:
+            name = "Star";
     	}
     	
     	String query = ("SELECT * FROM " + name);
@@ -153,29 +136,29 @@ public class AstroQuiz {
     	
     	int rows = 0;
     	try {
-    		if (rs.last()) {
-    			rows = rs.getRow();
-    			// Move to beginning
-    			rs.beforeFirst();
-    		} else {
-    			System.out.println("Error: Empty Set");
-    			System.exit(-1);
-    		}
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to beginning
+                rs.beforeFirst();
+            } else {
+                System.out.println("Error: Empty Set");
+                System.exit(-1);
+            }
     	} catch (Exception e) {
-    		e.printStackTrace();
+            e.printStackTrace();
     	}
     	
     	String randName = "";
     	
     	int rand = ((int)Math.random() * 100 % rows) + 1;
     	try {
-    		for(int i = 0; (i < rows && rs.next()); i++) {
-    			randName = rs.getString("Name");
-    		}
-		} catch (SQLException e) {
-			System.out.println("Error generating random query.");
-			e.printStackTrace();
-		}
+            for(int i = 0; (i < rows && rs.next()); i++) {
+                randName = rs.getString("Name");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error generating random query.");
+            e.printStackTrace();
+        }
     	return randName;
     	
     }
@@ -187,8 +170,8 @@ public class AstroQuiz {
     	ResultSet result = null;
     	Statement stmt;
         try {
-        	stmt = connection.createStatement();
-        	stmt.setQueryTimeout(10);
+            stmt = connection.createStatement();
+            stmt.setQueryTimeout(10);
             result = stmt.executeQuery(query);
         } catch (Exception e) {
             System.out.println("Error: execQuery\n");
