@@ -45,8 +45,7 @@ public class AstroQuiz {
         getPlayerName();
         dbConnect();
         guiStart();
-        //showQuestions();
-        //createQuestions();
+        createQuestions();
 
         //Testing database connection
         System.out.println("\nTesting connection with SELECT statement\n");
@@ -72,7 +71,6 @@ public class AstroQuiz {
      generated, queries made and results to be shown
      */
     private void dbConnect() {
-        
         try {
             Class.forName("org.sqlite.JDBC");
             connection = null;
@@ -84,9 +82,21 @@ public class AstroQuiz {
             System.err.println("SQLException: \n" + e.getMessage());
         }
     }
-    
+
+    /**
+       Currently for testing, creates questions to send to the GUI
+    */
     private void createQuestions() {
-    	
+
+        Question[] quizQs = new Question[10];
+
+        String[] options1 =  {"Huh?", "Pfffft..", "I Dunno", "OK"};
+        
+        quizQs[0] = new MCQuestion("What?", options1);
+        quizQs[1] = new ResponseQuestion("Why?");
+        
+        
+    	/*
     	allQuestions[0] = new ResponseQuestion(allText[0]);
     	allQuestions[1] = new ResponseQuestion(allText[1]);
     	allQuestions[2] = new ResponseQuestion(allText[2]);
@@ -99,8 +109,26 @@ public class AstroQuiz {
     	allQuestions[9] = new ResponseQuestion(allText[9]);
     	allQuestions[10] = new ResponseQuestion(allText[10]);
     	allQuestions[11] = new ResponseQuestion(allText[11]);
+        */
+    }
+
+    /**
+       Sends a question to the GUI to be displayed
+    */
+    public void sendQuestion() {
+
+    }
+
+    /**
+       Called by the GUI to pull the user's response and process it.
+    */
+    public void processResponse {
+
     }
     
+    /**
+       Randomizes objects to be in questions,
+    */
     private String randomObj() {
     	int randTable = (int)Math.random() * 100 % 6;
     	String name;
@@ -161,7 +189,7 @@ public class AstroQuiz {
     	
     }
 
-    /*
+    /**
       @return Computes the result set for a query
     */
     private ResultSet execQuery(String query) {
@@ -184,10 +212,6 @@ public class AstroQuiz {
      */
     private void guiStart() {
         QuizFrame test = new QuizFrame(playerName);
-    }
-    
-    private void showQuestions() {
-        
     }
     
     /**
