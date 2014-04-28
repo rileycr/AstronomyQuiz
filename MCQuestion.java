@@ -1,36 +1,57 @@
-/*
+/**
  Authors:  Gavin Golden, Mark Gudorf, Victoria McIe, Cooper Riley
  Class: CSE 385
  Assignment: Astronomy Quiz
  Instructor: Dr. Inclezan
  */
-
 public class MCQuestion extends Question {
-    
-    private String[] choice = new String[4];
+
+    private String[] choices = new String[4];
+
+    /**
+      Constructor with question text only
+    */
+    public MCQuestion(String text){
+        super(text);
+    }
     
     /**
-     Constructor
+       Constructor
      */
     public MCQuestion(String text, String[] choice){
-        //super(text);
-        for(int i = 0; i < choice.length; i++){
-            this.choice[i] = choice[i];
+        super(text);
+        for(int i = 0; i < choices.length; i++){
+            this.choices[i] = choices[i];
         }
     }
     
     /**
-     Copy Constructor
+       Copy Constructor
      */
     public MCQuestion(MCQuestion quest){
-        this(quest.getText(), quest.getChoice());
+        this(quest.getText(), quest.getChoices());
     }
     
     /**
-     @return the choice array
+     @return the choices array
      */
-    public String[] getChoice(){
-        return this.choice;
+    public String[] getChoices(){
+        return this.choices;
+    }
+
+    /**
+      @return a string in human readable form to display the question
+      and options to the user
+    */
+    public String displayQuestion(){
+        return (getText()+":\nA. "+choices[0]+"\nB. "+choices[1]+"\nC. "+choices[2]+"\nD. "+choices[3]);
+    }
+    
+    /**
+      returns the requested choice for the multiple choice question
+    */
+    public String getChoice(int i){
+        return choices[i];
     }
     
     /**

@@ -33,7 +33,6 @@ public class AstroQuiz {
     
     public Question allQuestions[] = new Question[NUM_Q];
     
-    
     /***************************************************************************/
     
     /**
@@ -91,8 +90,8 @@ public class AstroQuiz {
     	allQuestions[0] = new ResponseQuestion(allText[0]);
     	allQuestions[1] = new ResponseQuestion(allText[1]);
     	allQuestions[2] = new ResponseQuestion(allText[2]);
-    	//allQuestions[3] = new MCQuestion(allText[3]);
-    	//allQuestions[4] = new MCQuestion(allText[4]);
+    	allQuestions[3] = new MCQuestion(allText[3]);
+    	allQuestions[4] = new MCQuestion(allText[4]);
     	allQuestions[5] = new ResponseQuestion(allText[5]);
     	allQuestions[6] = new ResponseQuestion(allText[6]);
     	allQuestions[7] = new ResponseQuestion(allText[7]);
