@@ -16,6 +16,7 @@ public class AstroQuiz {
     private QuizFrame guiFrame;
     public static Connection connection;
     private int qCount = 0;		// running count of the question
+    Question[] quizQs = new Question[10];
     
     private String allText[] = new String[] {
     "Name two planets that orbit the Sun.",
@@ -30,9 +31,7 @@ public class AstroQuiz {
     "What stars are in Orion’s Belt?",
     "__(Star)__ is in __(Galaxy)__ (T/F)"
     };
-    final int NUM_Q = allText.length;
     
-    Question[] quizQs = new Question[10];
     
     /***************************************************************************/
     
@@ -79,8 +78,6 @@ public class AstroQuiz {
     */
     private void createQuestions() {
 
-        Question[] quizQs = new Question[10];
-
         String[] options1 =  {"Huh?", "Pfffft..", "I Dunno", "OK"};
         
         quizQs[0] = new MCQuestion("What?", options1);
@@ -107,15 +104,17 @@ public class AstroQuiz {
     /**
        Sends a question to the GUI to be displayed
     */
-    public void sendQuestion(Question quest) {
-        guiFrame.editQuestion(quest);
+    public void sendQuestion() {
+        guiFrame.editQuestion(quizQs[count]);
+        qCount ++;
     }
 
     /**
        Called by the GUI to pull the user's response and process it.
     */
-    public void processResponse() {
-
+    public static boolean processResponse(String response) {
+        
+        return true;
     }
     
     /**

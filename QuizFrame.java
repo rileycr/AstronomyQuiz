@@ -12,14 +12,20 @@ public class QuizFrame extends JFrame {
     
     private static int screenWidth;
     private static int screenHeight;
+    
     private JPanel buttonPanel;
     private JTextPane questionPane;
     private JTextField responseField;
+    
     private JButton submitButton;
     private JButton quitButton;
-    private ButtonListener bListen;
+    private JButton choiceA;
+    private JButton choiceB;
+    private JButton choiceC;
+    private JButton choiceD;
     
-    private String response;
+    private ButtonListener bListen;
+
     private int questionNumber;
     
     /**
@@ -46,28 +52,37 @@ public class QuizFrame extends JFrame {
         
         boolean mcQuestion = (newQuestion instanceof MCQuestion);
         responseField.setVisible(!mcQuestion);
+        submitButton.setVisible(!mcQuestion);
         buttonPanel.setVisible(mcQuestion);
     }
-    
-    /**
-     @return the response from the user
-     */
-    public String getResponse(){
-        return response;
-    }
-    
-    //For testing purposes
-    public static void main(String[] args) {
-        QuizFrame test = new QuizFrame("Cooper");
-    }
 
+    /**
+       Sends the response to the user's answer
+    */
+    private static void sendResponse(String answer){
+
+        if(AstroQuiz.processResponse(answer)){
+            //TODO Send answer and get result
+        }
+
+    }
+    
     /**
       Subclass that listens to all the buttons in the GUI
     */
     public class ButtonListener implements ActionListener {
+
         public void actionPerformed(ActionEvent e){
             if (e.getSource().equals(submitButton)){
-                response = responseField.getText();
+                sendResponse(responseField.getText());
+            } else if(e.getSource().equals(choiceA)) {
+                sendResponse("A");
+            } else if(e.getSource().equals(choiceB)) {
+                sendResponse("B");
+            } else if(e.getSource().equals(choiceC)) {
+                sendResponse("C");
+            } else if(e.getSource().equals(choiceD)) {
+                sendResponse("D");
             } else if (e.getSource().equals(quitButton)){
                 System.exit(0);
             }
@@ -75,7 +90,7 @@ public class QuizFrame extends JFrame {
     }
     
     /**
-     Draws the GUI
+       Remaining code draws the GUI
      */
     public void setupGUI(){
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -155,28 +170,28 @@ public class QuizFrame extends JFrame {
         centerPanel.add(buttonPanel);
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         
-        JButton choiceA = new JButton("A");
+        choiceA = new JButton("A");
         buttonPanel.add(choiceA);
         choiceA.addActionListener(bListen);
         
-        JButton choiceB = new JButton("B");
+        choiceB = new JButton("B");
         buttonPanel.add(choiceB);
         choiceB.addActionListener(bListen);
         
-        JButton choiceC = new JButton("C");
+        choiceC = new JButton("C");
         buttonPanel.add(choiceC);
         choiceC.addActionListener(bListen);
         
-        JButton choiceD = new JButton("D");
+        choiceD = new JButton("D");
         buttonPanel.add(choiceD);
         choiceD.addActionListener(bListen);
 
         //For the user to enter Response Question answers
         responseField = new JTextField();
         centerLayout.putConstraint(SpringLayout.NORTH, buttonPanel, 14, SpringLayout.NORTH, responseField);
-        centerLayout.putConstraint(SpringLayout.WEST, buttonPanel, 25, SpringLayout.WEST, responseField);
+        centerLayout.putConstraint(SpringLayout.WEST, buttonPanel, 0, SpringLayout.WEST, responseField);
         centerLayout.putConstraint(SpringLayout.SOUTH, buttonPanel, -14, SpringLayout.SOUTH, responseField);
-        centerLayout.putConstraint(SpringLayout.EAST, buttonPanel, -25, SpringLayout.EAST, responseField);
+        centerLayout.putConstraint(SpringLayout.EAST, buttonPanel, 0, SpringLayout.EAST, responseField);
         centerLayout.putConstraint(SpringLayout.SOUTH, extraPanel, 0, SpringLayout.SOUTH, responseField);
         centerLayout.putConstraint(SpringLayout.NORTH, responseField, -71, SpringLayout.SOUTH, centerPanel);
         centerLayout.putConstraint(SpringLayout.WEST, responseField, 0, SpringLayout.WEST, centerPanel);

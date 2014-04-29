@@ -22,7 +22,7 @@ public class ResponseQuestion extends Question {
     }
 
     public String displayQuestion(){
-        return text;
+        return getText();
     }
     
 }
