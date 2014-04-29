@@ -13,6 +13,7 @@ public class AstroQuiz {
     /******************		Member Variables	*************************/
 	
     private String playerName;
+    private QuizFrame guiFrame;
     public static Connection connection;
     private int qCount = 0;		// running count of the question
     
@@ -31,7 +32,7 @@ public class AstroQuiz {
     };
     final int NUM_Q = allText.length;
     
-    public Question allQuestions[] = new Question[NUM_Q];
+    Question[] quizQs = new Question[10];
     
     /***************************************************************************/
     
@@ -46,17 +47,7 @@ public class AstroQuiz {
         dbConnect();
         guiStart();
         createQuestions();
-
-        //Testing database connection
-        System.out.println("\nTesting connection with SELECT statement\n");
-    	try {
-            ResultSet rs = execQuery("SELECT * FROM Star");
-            while(rs.next()) {
-                System.out.println(rs.getString("Name"));
-            }
-    	} catch (Exception e) {
-            System.out.println("Not working");
-    	}
+        
     }
     
     /**
@@ -94,7 +85,8 @@ public class AstroQuiz {
         
         quizQs[0] = new MCQuestion("What?", options1);
         quizQs[1] = new ResponseQuestion("Why?");
-        
+
+        sendQuestion(quizQs[0]);
         
     	/*
     	allQuestions[0] = new ResponseQuestion(allText[0]);
@@ -115,14 +107,14 @@ public class AstroQuiz {
     /**
        Sends a question to the GUI to be displayed
     */
-    public void sendQuestion() {
-
+    public void sendQuestion(Question quest) {
+        guiFrame.editQuestion(quest);
     }
 
     /**
        Called by the GUI to pull the user's response and process it.
     */
-    public void processResponse {
+    public void processResponse() {
 
     }
     
@@ -211,7 +203,7 @@ public class AstroQuiz {
      Create main GUI frame and enclosed objects.
      */
     private void guiStart() {
-        QuizFrame test = new QuizFrame(playerName);
+        guiFrame = new QuizFrame(playerName);
     }
     
     /**

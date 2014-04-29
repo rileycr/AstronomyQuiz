@@ -20,4 +20,9 @@ public class ResponseQuestion extends Question {
     public boolean isCorrect(String response){
     	return true;
     }
+
+    public String displayQuestion(){
+        return text;
+    }
+    
 }

@@ -46,4 +46,5 @@ public abstract class Question {
      @return if the guess is correct
      */
     public abstract boolean isCorrect(String response);
+    public abstract String displayQuestion();
 }

@@ -10,7 +10,6 @@ import javax.swing.*;
  */
 public class QuizFrame extends JFrame {
     
-    private String displayedQuestion;
     private static int screenWidth;
     private static int screenHeight;
     private JPanel buttonPanel;
@@ -20,11 +19,10 @@ public class QuizFrame extends JFrame {
     private JButton quitButton;
     private ButtonListener bListen;
     
-    //Make these ArrayLists? OR have the arraylists in AstroQuiz
-    private Question question;
     private String response;
+    private int questionNumber;
     
-    /*
+    /**
      Constructor
      */
     public QuizFrame(String player){
@@ -33,25 +31,25 @@ public class QuizFrame extends JFrame {
         setupGUI();
     }
     
-    /*
+    /**
      Default constructor
      */
     public QuizFrame() {
         this("");
     }
     
-    /*
+    /**
      Change the question to be displayed
      */
     public void editQuestion(Question newQuestion){
-        questionPane.setText(newQuestion.getText());
+        questionPane.setText(newQuestion.displayQuestion());
         
         boolean mcQuestion = (newQuestion instanceof MCQuestion);
-        responseField.setVisible(mcQuestion);
-        buttonPanel.setVisible(!mcQuestion);
+        responseField.setVisible(!mcQuestion);
+        buttonPanel.setVisible(mcQuestion);
     }
     
-    /*
+    /**
      @return the response from the user
      */
     public String getResponse(){
@@ -63,7 +61,7 @@ public class QuizFrame extends JFrame {
         QuizFrame test = new QuizFrame("Cooper");
     }
 
-    /*
+    /**
       Subclass that listens to all the buttons in the GUI
     */
     public class ButtonListener implements ActionListener {
@@ -76,7 +74,7 @@ public class QuizFrame extends JFrame {
         }
     }
     
-    /*
+    /**
      Draws the GUI
      */
     public void setupGUI(){

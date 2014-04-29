@@ -40,13 +40,7 @@ public class MCQuestion extends Question {
         return this.choices;
     }
 
-    /**
-      @return a string in human readable form to display the question
-      and options to the user
-    */
-    public String displayQuestion(){
-        return (getText()+":\nA. "+choices[0]+"\nB. "+choices[1]+"\nC. "+choices[2]+"\nD. "+choices[3]);
-    }
+
     
     /**
       returns the requested choice for the multiple choice question
@@ -62,5 +56,13 @@ public class MCQuestion extends Question {
      */
     public boolean isCorrect(String response){
         return answer.equals(response);
+    }
+
+    /**
+       @return a string in human readable form to display the question
+       and options to the user
+    */
+    public String displayQuestion(){
+        return (getText()+"\n\nA. "+choices[0]+"\nB. "+choices[1]+"\nC. "+choices[2]+"\nD. "+choices[3]);
     }
 }
