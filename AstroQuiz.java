@@ -16,7 +16,7 @@ public class AstroQuiz {
     private QuizFrame guiFrame;
     public static Connection connection;
     private int qCount = 0;		// running count of the question
-    Question[] quizQs = new Question[10];
+    private static Question[] quizQs = new Question[10];
     
     private String allText[] = new String[] {
     "Name two planets that orbit the Sun.",
@@ -79,7 +79,7 @@ public class AstroQuiz {
     private void createQuestions() {
 
         String[] options1 = {"Huh?", "Pfffft..", "I Dunno", "OK"};
-        String[] options2 = {
+        String[] options2 = {};
         
         quizQs[0] = new MCQuestion("What?", options1);
         quizQs[1] = new ResponseQuestion("What is the mass of Earth?");
@@ -107,7 +107,7 @@ public class AstroQuiz {
        Sends a question to the GUI to be displayed
     */
     public void sendQuestion() {
-        guiFrame.editQuestion(quizQs[count]);
+        guiFrame.editQuestion(quizQs[qCount]);
         qCount ++;
     }
 
@@ -116,7 +116,7 @@ public class AstroQuiz {
     */
     public static boolean processResponse(String response, int qNumber) {
         
-        return quizQs[qnumber].isCorrect(response);
+        return quizQs[qNumber].isCorrect(response);
     }
     
     /**

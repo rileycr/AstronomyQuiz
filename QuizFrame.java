@@ -59,7 +59,7 @@ public class QuizFrame extends JFrame {
     /**
        Sends the response to the user's answer
     */
-    private static void sendResponse(String answer){
+    private void sendResponse(String answer){
 
         if(AstroQuiz.processResponse(answer, questionNumber)){
             //TODO Send answer and get result
