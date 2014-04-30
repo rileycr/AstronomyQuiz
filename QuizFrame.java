@@ -12,6 +12,8 @@ public class QuizFrame extends JFrame {
     
     private static int screenWidth;
     private static int screenHeight;
+
+    private AstroQuiz quiz;
     
     private JPanel buttonPanel;
     private JTextPane questionPane;
@@ -31,17 +33,11 @@ public class QuizFrame extends JFrame {
     /**
      Constructor
      */
-    public QuizFrame(String player){
+    public QuizFrame(String player, AstroQuiz quiz){
         super(player + "'s Astronomy Quiz");
+        this.quiz = quiz;
         bListen = new ButtonListener();
         setupGUI();
-    }
-    
-    /**
-     Default constructor
-     */
-    public QuizFrame() {
-        this("");
     }
     
     /**
@@ -60,15 +56,17 @@ public class QuizFrame extends JFrame {
        Sends the response to the user's answer
     */
     private void sendResponse(String answer){
-
+        System.out.println("Got to sendResponse");
         if(AstroQuiz.processResponse(answer, questionNumber)){
-            //TODO Send answer and get result
+            JOptionPane.showMessageDialog(this, "OK", "You did something right!!!", JOptionPane.PLAIN_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "OK", "You did something WRONG!!!", JOptionPane.PLAIN_MESSAGE);
         }
-
+        quiz.sendQuestion();
     }
     
     /**
-      Subclass that listens to all the buttons in the GUI
+       Subclass that listens to all the buttons in the GUI
     */
     public class ButtonListener implements ActionListener {
 

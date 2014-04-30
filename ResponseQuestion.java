@@ -10,8 +10,8 @@ public class ResponseQuestion extends Question {
     /**
       Constructor
     */
-    public ResponseQuestion(String text){
-        super(text);
+    public ResponseQuestion(String text, String answer){
+        super(text, answer);
     }
 
     /**

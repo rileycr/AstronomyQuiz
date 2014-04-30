@@ -5,7 +5,7 @@
  Instructor: Dr. Inclezan
  */
 public abstract class Question {
-    
+    private String answer;
     private String text;
     
     /**
@@ -20,6 +20,14 @@ public abstract class Question {
     */
     public Question(String text){
         this.text = text;
+    }
+
+    /**
+       Constructor
+    */
+    public Question(String text, String answer){
+        this.text = text;
+        this.answer = answer;
     }
     
     /**
@@ -40,6 +48,21 @@ public abstract class Question {
     public void setText(String text){
         this.text = text;
     }
+
+    /**
+       @return the answer to a question
+    */
+    public String getAnswer(){
+        return answer;
+    }
+    
+    /**
+       Allows acces to change the answer to a quesetion
+    */
+    public void setAnswer(String answer){
+        this.answer = answer;
+    }
+    
     /**
      Determines if the response is correct
      @param response the user's guess

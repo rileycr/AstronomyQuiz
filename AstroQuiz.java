@@ -11,27 +11,12 @@ import javax.swing.*;
 public class AstroQuiz {
 	
     /******************		Member Variables	*************************/
-	
+
     private String playerName;
     private QuizFrame guiFrame;
     public static Connection connection;
     private int qCount = 0;		// running count of the question
     private static Question[] quizQs = new Question[10];
-    
-    private String allText[] = new String[] {
-    "Name two planets that orbit the Sun.",
-    "What are the 3 different types of galaxies?",
-    "What is the mass of ____?",
-    "Which planet is more massive? (Multiple choice)",
-    "Which star has the most planets orbiting it? (Multiple choice)",
-    "What is the name of the supercluster Earth is in?",
-    "True or false? Neptune is larger than Saturn. --- FALSE",
-    "Phobos and Deimos are moons of what planet? --- MARS",
-    "Triton is the largest moon of what planet? -- Neptune",
-    "What stars are in Orion’s Belt?",
-    "__(Star)__ is in __(Galaxy)__ (T/F)"
-    };
-    
     
     /***************************************************************************/
     
@@ -44,9 +29,9 @@ public class AstroQuiz {
         
         getPlayerName();
         dbConnect();
-        guiStart();
         createQuestions();
-        
+        guiStart();
+        sendQuestion();
     }
     
     /**
@@ -74,33 +59,17 @@ public class AstroQuiz {
     }
 
     /**
-       Currently for testing, creates questions to send to the GUI
+       Currently in testing phase, creates questions to send to the GUI
     */
     private void createQuestions() {
 
         String[] options1 = {"Huh?", "Pfffft..", "I Dunno", "OK"};
-        String[] options2 = {};
+        //String[] options2 = {};
         
-        quizQs[0] = new MCQuestion("What?", options1);
-        quizQs[1] = new ResponseQuestion("What is the mass of Earth?");
-        quizQs[2] = new MCQuestion("What planet has the most moons orbiting it?", options2);
+        quizQs[0] = new MCQuestion("What?", options1, "B");
+        quizQs[1] = new ResponseQuestion("What is the mass of Earth?", "100");
+        //quizQs[2] = new MCQuestion("What planet has the most moons orbiting it?", options2);
 
-        sendQuestion();
-        
-    	/*
-    	allQuestions[0] = new ResponseQuestion(allText[0]);
-    	allQuestions[1] = new ResponseQuestion(allText[1]);
-    	allQuestions[2] = new ResponseQuestion(allText[2]);
-    	allQuestions[3] = new MCQuestion(allText[3]);
-    	allQuestions[4] = new MCQuestion(allText[4]);
-    	allQuestions[5] = new ResponseQuestion(allText[5]);
-    	allQuestions[6] = new ResponseQuestion(allText[6]);
-    	allQuestions[7] = new ResponseQuestion(allText[7]);
-    	allQuestions[8] = new ResponseQuestion(allText[8]);
-    	allQuestions[9] = new ResponseQuestion(allText[9]);
-    	allQuestions[10] = new ResponseQuestion(allText[10]);
-    	allQuestions[11] = new ResponseQuestion(allText[11]);
-        */
     }
 
     /**
@@ -204,7 +173,7 @@ public class AstroQuiz {
      Create main GUI frame and enclosed objects.
      */
     private void guiStart() {
-        guiFrame = new QuizFrame(playerName);
+        guiFrame = new QuizFrame(playerName, this);
     }
     
     /**

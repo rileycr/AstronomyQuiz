@@ -19,8 +19,9 @@ public class MCQuestion extends Question {
     /**
        Constructor
      */
-    public MCQuestion(String text, String[] choice){
+    public MCQuestion(String text, String[] choice, String answer){
         super(text);
+        setAnswer(answer);
         for(int i = 0; i < choices.length; i++){
             this.choices[i] = choice[i];
         }
@@ -30,17 +31,15 @@ public class MCQuestion extends Question {
        Copy Constructor
      */
     public MCQuestion(MCQuestion quest){
-        this(quest.getText(), quest.getChoices());
+        this(quest.getText(), quest.getChoices(), quest.getAnswer());
     }
-    
+
     /**
      @return the choices array
      */
     public String[] getChoices(){
         return this.choices;
     }
-
-
     
     /**
       returns the requested choice for the multiple choice question
