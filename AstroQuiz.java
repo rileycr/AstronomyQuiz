@@ -78,12 +78,14 @@ public class AstroQuiz {
     */
     private void createQuestions() {
 
-        String[] options1 =  {"Huh?", "Pfffft..", "I Dunno", "OK"};
+        String[] options1 = {"Huh?", "Pfffft..", "I Dunno", "OK"};
+        String[] options2 = {
         
         quizQs[0] = new MCQuestion("What?", options1);
-        quizQs[1] = new ResponseQuestion("Why?");
+        quizQs[1] = new ResponseQuestion("What is the mass of Earth?");
+        quizQs[2] = new MCQuestion("What planet has the most moons orbiting it?", options2);
 
-        sendQuestion(quizQs[0]);
+        sendQuestion();
         
     	/*
     	allQuestions[0] = new ResponseQuestion(allText[0]);
