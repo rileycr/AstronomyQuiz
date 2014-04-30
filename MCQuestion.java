@@ -1,5 +1,5 @@
 /**
- Authors:  Gavin Golden, Mark Gudorf, Victoria McIe, Cooper Riley
+ Authors:  Gavin Golden, Cooper Riley
  Class: CSE 385
  Assignment: Astronomy Quiz
  Instructor: Dr. Inclezan
