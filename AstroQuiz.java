@@ -114,9 +114,9 @@ public class AstroQuiz {
     /**
        Called by the GUI to pull the user's response and process it.
     */
-    public static boolean processResponse(String response) {
+    public static boolean processResponse(String response, int qNumber) {
         
-        return true;
+        return quizQs[qnumber].isCorrect(response);
     }
     
     /**
