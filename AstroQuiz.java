@@ -66,6 +66,8 @@ public class AstroQuiz {
 
     /**
        Currently in testing phase, creates questions to send to the GUI
+       
+       *******New protocol: make the item after the last question null*********
     */
     private void createQuestions() {
 
