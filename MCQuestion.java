@@ -6,7 +6,6 @@
  */
 public class MCQuestion extends Question {
 
-    private String answer;
     private String[] choices = new String[4];
 
     /**
@@ -21,10 +20,10 @@ public class MCQuestion extends Question {
      */
     public MCQuestion(String text, String[] choice, String answer){
         super(text);
-        setAnswer(answer);
         for(int i = 0; i < choices.length; i++){
             this.choices[i] = choice[i];
         }
+        setAnswer(answer);
     }
     
     /**
@@ -53,8 +52,8 @@ public class MCQuestion extends Question {
      correctly.
      @return the result
      */
-    public boolean isCorrect(String response){
-        return answer.equals(response);
+    public boolean isCorrect(String response){;
+        return getAnswer().equals(response);
     }
 
     /**

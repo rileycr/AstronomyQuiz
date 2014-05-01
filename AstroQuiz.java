@@ -76,7 +76,7 @@ public class AstroQuiz {
        Sends a question to the GUI to be displayed
     */
     public void sendQuestion() {
-        guiFrame.editQuestion(quizQs[qCount]);
+        guiFrame.editQuestion(quizQs[qCount], qCount);
         qCount ++;
     }
 

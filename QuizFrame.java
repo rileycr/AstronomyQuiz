@@ -43,8 +43,9 @@ public class QuizFrame extends JFrame {
     /**
      Change the question to be displayed
      */
-    public void editQuestion(Question newQuestion){
+    public void editQuestion(Question newQuestion, int qCount){
         questionPane.setText(newQuestion.displayQuestion());
+        questionNumber = qCount;
         
         boolean mcQuestion = (newQuestion instanceof MCQuestion);
         responseField.setVisible(!mcQuestion);
