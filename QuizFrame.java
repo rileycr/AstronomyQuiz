@@ -52,6 +52,7 @@ public class QuizFrame extends JFrame {
      */
     public void editQuestion(Question newQuestion, int qCount){
         if(newQuestion == null){
+            updateNumCorrect();
             JOptionPane.showMessageDialog(this, "You've completed your quiz!! you got a\n\n"+grade()+"%", "OK "+player+"!", JOptionPane.PLAIN_MESSAGE);
         } else {
             questionPane.setText(newQuestion.displayQuestion());

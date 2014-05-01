@@ -78,6 +78,9 @@ public class AstroQuiz {
         quizQs[1] = new ResponseQuestion("What is the mass of Earth?", "100");
         //quizQs[2] = new MCQuestion("What planet has the most moons orbiting it?", options2);
 
+
+        quizQs[2] = null;
+
     }
 
     /**
