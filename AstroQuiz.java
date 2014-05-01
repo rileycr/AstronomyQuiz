@@ -14,7 +14,7 @@ public class AstroQuiz {
 
     private String playerName;
     private QuizFrame guiFrame;
-    public static Connection connection;
+    public Connection connection;
     private int qCount = 0;		// running count of the question
     private static Question[] quizQs = new Question[10];
     
@@ -29,9 +29,10 @@ public class AstroQuiz {
         
         getPlayerName();
         dbConnect();
-        createQuestions();
-        guiStart();
-        sendQuestion();
+        System.out.println(randomObj());       /*******/
+//        createQuestions();
+//        guiStart();
+//        sendQuestion();
     }
     
     /**
@@ -117,30 +118,23 @@ public class AstroQuiz {
         default:
             name = "Star";
     	}
-    	
-    	String query = ("SELECT * FROM " + name);
-    	
+        // Find the number of rows in the upcoming result set.
+    	String countQuery = "SELECT COUNT(*) FROM " + name;
+        int rows = -1;
+        try {
+            rows = Integer.parseInt(execQuery(countQuery).getString("COUNT(*)"));
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        String query = ("SELECT * FROM " + name);
     	ResultSet rs = execQuery(query);
-    	
-    	int rows = 0;
-    	try {
-            if (rs.last()) {
-                rows = rs.getRow();
-                // Move to beginning
-                rs.beforeFirst();
-            } else {
-                System.out.println("Error: Empty Set");
-                System.exit(-1);
-            }
-    	} catch (Exception e) {
-            e.printStackTrace();
-    	}
     	
     	String randName = "";
     	
-    	int rand = ((int)Math.random() * 100 % rows) + 1;
+    	int rand = (int)(Math.random() * rows);
+        
     	try {
-            for(int i = 0; (i < rows && rs.next()); i++) {
+            for(int i = 0; (i < rand && rs.next()); i++) {
                 randName = rs.getString("Name");
             }
         } catch (SQLException e) {
