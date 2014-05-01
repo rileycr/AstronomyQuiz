@@ -16,8 +16,11 @@ public class QuizFrame extends JFrame {
     private AstroQuiz quiz;
     
     private JPanel buttonPanel;
+    private JPanel northPanel;
     private JTextPane questionPane;
     private JTextField responseField;
+    private JTextArea infoQuestionProgress;
+    private JTextArea infoAccuracy;
     
     private JButton submitButton;
     private JButton quitButton;
@@ -29,6 +32,7 @@ public class QuizFrame extends JFrame {
     private ButtonListener bListen;
 
     private int questionNumber;
+    private int numCorrect;
     
     /**
      Constructor
@@ -36,6 +40,7 @@ public class QuizFrame extends JFrame {
     public QuizFrame(String player, AstroQuiz quiz){
         super(player + "'s Astronomy Quiz");
         this.quiz = quiz;
+        this.numCorrect = 0;
         bListen = new ButtonListener();
         setupGUI();
     }
@@ -45,11 +50,11 @@ public class QuizFrame extends JFrame {
      */
     public void editQuestion(Question newQuestion, int qCount){
         questionPane.setText(newQuestion.displayQuestion());
-        questionNumber = qCount;
+        this.questionNumber = qCount;
+        updateQProgress();
         
         boolean mcQuestion = (newQuestion instanceof MCQuestion);
         responseField.setVisible(!mcQuestion);
-        submitButton.setVisible(!mcQuestion);
         buttonPanel.setVisible(mcQuestion);
     }
 
@@ -59,11 +64,34 @@ public class QuizFrame extends JFrame {
     private void sendResponse(String answer){
         System.out.println("Got to sendResponse");
         if(AstroQuiz.processResponse(answer, questionNumber)){
-            JOptionPane.showMessageDialog(this, "OK", "You did something right!!!", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(this, "OK!", "You did something right!!!", JOptionPane.PLAIN_MESSAGE);
+            updateNumCorrect();
         } else {
-            JOptionPane.showMessageDialog(this, "OK", "You did something WRONG!!!", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(this, "OK...", "You did something WRONG!!!", JOptionPane.PLAIN_MESSAGE);
         }
         quiz.sendQuestion();
+    }
+
+    /**
+       Adds one if the answer is correct
+    */
+    private void updateNumCorrect(){
+        numCorrect++;
+        updateQAccuracy();
+    }
+
+    /**
+       Updates the accuracy of the responses
+    */
+    private void updateQAccuracy(){
+        infoAccuracy.setText("\t"+((numCorrect*1.0)/(questionNumber+1.0)*100)+"% Correct so far");
+    }
+
+    /**
+       Updates the question progress counter
+    */
+    private void updateQProgress(){
+        infoQuestionProgress.setText("Question "+(questionNumber + 1)+" of 10\t\t");
     }
     
     /**
@@ -116,23 +144,24 @@ public class QuizFrame extends JFrame {
         quitButton.addActionListener(bListen);
         
         //Info for the user (how far along they are)
-        JPanel northPanel = new JPanel();
+        northPanel = new JPanel();
         FlowLayout flowLayout = (FlowLayout) northPanel.getLayout();
         flowLayout.setHgap(0);
         getContentPane().add(northPanel, BorderLayout.NORTH);
         
         //Input box
-        JTextArea infoQuestionProgress = new JTextArea();
+        infoQuestionProgress = new JTextArea();
         infoQuestionProgress.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        infoQuestionProgress.setText("Question _ of 10\t\t");
         infoQuestionProgress.setEditable(false);
         northPanel.add(infoQuestionProgress);
         
-        JTextArea infoAccuracy = new JTextArea();
+        infoAccuracy = new JTextArea();
         infoAccuracy.setFont(new Font("Tahoma", Font.PLAIN, 13));
         infoAccuracy.setEditable(false);
-        infoAccuracy.setText("\t__% Correct so far");
+
         northPanel.add(infoAccuracy);
+        updateQProgress();
+        updateQAccuracy();
         
         JPanel westPanel = new JPanel();
         getContentPane().add(westPanel, BorderLayout.WEST);
