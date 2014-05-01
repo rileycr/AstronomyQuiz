@@ -12,6 +12,7 @@ public class QuizFrame extends JFrame {
     
     private static int screenWidth;
     private static int screenHeight;
+    private static String player;
 
     private AstroQuiz quiz;
     
@@ -42,6 +43,7 @@ public class QuizFrame extends JFrame {
         this.quiz = quiz;
         this.numCorrect = 0;
         bListen = new ButtonListener();
+        this.player = player;
         setupGUI();
     }
     
@@ -49,26 +51,30 @@ public class QuizFrame extends JFrame {
      Change the question to be displayed
      */
     public void editQuestion(Question newQuestion, int qCount){
-        questionPane.setText(newQuestion.displayQuestion());
-        this.questionNumber = qCount;
-        updateQProgress();
-        
-        boolean mcQuestion = (newQuestion instanceof MCQuestion);
-        responseField.setVisible(!mcQuestion);
-        buttonPanel.setVisible(mcQuestion);
+        if(newQuestion == null){
+            JOptionPane.showMessageDialog(this, "You've completed your quiz!! you got a\n\n"+grade()+"%", "OK "+player+"!", JOptionPane.PLAIN_MESSAGE);
+        } else {
+            questionPane.setText(newQuestion.displayQuestion());
+            this.questionNumber = qCount;
+            updateQProgress();
+            
+            boolean mcQuestion = (newQuestion instanceof MCQuestion);
+            responseField.setVisible(!mcQuestion);
+            buttonPanel.setVisible(mcQuestion);
+        }
     }
 
     /**
        Sends the response to the user's answer
     */
     private void sendResponse(String answer){
-        System.out.println("Got to sendResponse");
         if(AstroQuiz.processResponse(answer, questionNumber)){
-            JOptionPane.showMessageDialog(this, "OK!", "You did something right!!!", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(this, "You rock "+player+"!!!", "You did something right!!!", JOptionPane.PLAIN_MESSAGE);
             updateNumCorrect();
         } else {
-            JOptionPane.showMessageDialog(this, "OK...", "You did something WRONG!!!", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(this, "You can do better "+player+"!", "You did something WRONG!!!", JOptionPane.PLAIN_MESSAGE);
         }
+
         quiz.sendQuestion();
     }
 
@@ -84,7 +90,7 @@ public class QuizFrame extends JFrame {
        Updates the accuracy of the responses
     */
     private void updateQAccuracy(){
-        infoAccuracy.setText("\t"+((numCorrect*1.0)/(questionNumber+1.0)*100)+"% Correct so far");
+        infoAccuracy.setText("\t"+grade()+"% Correct so far");
     }
 
     /**
@@ -93,7 +99,14 @@ public class QuizFrame extends JFrame {
     private void updateQProgress(){
         infoQuestionProgress.setText("Question "+(questionNumber + 1)+" of 10\t\t");
     }
-    
+
+    /**
+       @return the accuracy of the user in %
+    */
+    private double grade(){
+        return ((numCorrect*1.0)/(questionNumber+1.0)*100);
+    }
+
     /**
        Subclass that listens to all the buttons in the GUI
     */
