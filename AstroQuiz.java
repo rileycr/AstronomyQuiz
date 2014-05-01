@@ -1,7 +1,7 @@
 import java.sql.*;
 import java.awt.*;
 import javax.swing.*;
-
+import java.util.ArrayList;
 /**
  Authors:  Gavin Golden, Mark Gudorf, Victoria McIe, Cooper Riley
  Class: CSE 385
@@ -103,44 +103,35 @@ public class AstroQuiz {
        Randomizes objects to be in questions,
     */
     private String randomObj() throws SQLException {
-    	int randTable = (int)Math.random() * 100 % 6;
-    	String name;
+        
+        ArrayList<String> tables = getTableNames();
+        
+        for(String s : tables) {
+            System.out.println("Table " + s);
+        }
+        
+    	// Get random
+        int rTable = (int)Math.random() * tables.size();
+    	String table = tables.get(rTable);
     	
-    	switch(randTable){
-        case 0:
-            name = "Planet";
-            break;
-        case 1:
-            name = "Moon";
-            break;
-        case 2:
-            name = "Star";
-            break;
-        case 3:
-            name = "Galaxy";
-            break;
-        case 4:
-            name = "Asteroid";
-            break;
-        case 5:
-            name = "Comet";
-            break;
-        default:
-            name = "Star";
-    	}
+
         // Find the number of rows in the upcoming result set.
-    	String countQuery = "SELECT COUNT(*) FROM " + name;
+    	String countQuery = "SELECT COUNT(*) FROM " + table;
         int rows = -1;
+        
         try {
             rows = Integer.parseInt(execQuery(countQuery).getString("COUNT(*)"));
-        } catch (SQLException e) {
+        }
+        catch (Exception e) {
             System.err.println(e.getMessage());
         }
-        String query = ("SELECT * FROM " + name);
+        // Prepare and execute query
+        String query = ("SELECT * FROM " + table);
     	ResultSet rs = execQuery(query);
     	
     	String randName = "";
     	
+        // Get object name from random row in result set
     	int rand = (int)(Math.random() * rows);
         
     	try {
@@ -156,26 +147,64 @@ public class AstroQuiz {
     	return randName;
     	
     }
+    
+    
+    
+    /**
+        Get list of names for all tables in database
+     */
+    private ArrayList<String> getTableNames() {
+        ArrayList<String> tables = new ArrayList<String>();
+        ResultSet rs = null;
+        try {
+            try {
+                DatabaseMetaData md = connection.getMetaData();
+                rs = md.getTables(null, null, "%", null);
+                while (rs.next()) {
+                    tables.add(rs.getString(3));
+                }
+            }
+            finally {
+                if(rs != null) {
+                    rs.close();
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        
+        return tables;
+
+    }
 
     /**
       @return Computes the result set for a query
     */
-    private ResultSet execQuery(String query) throws SQLException {
-    	ResultSet result = null;
-    	Statement stmt = null;
+    private ResultSet execQuery(String query) {
+
+        ResultSet result = null;
         try {
-            stmt = connection.createStatement();
+            Statement stmt = connection.createStatement();
             stmt.setQueryTimeout(10);
-            result = stmt.executeQuery(query);
-        } catch (Exception e) {
-            System.err.println("Error: execQuery\n");
-            e.printStackTrace();
-        } finally {
-            result.close();
-            stmt.close();
+            
+            try {
+                result = stmt.executeQuery(query);
+            }
+            catch (Exception e) {
+                System.err.println("Error: execQuery\n");
+                e.printStackTrace();
+            }
+            finally {
+                result.close();
+                stmt.close();
+            }
         }
-        
+        catch(Exception e) {
+            System.err.println(e.getMessage());
+        }
         return result;
+
     }
     
     /**
