@@ -26,13 +26,13 @@ public class AstroQuiz {
      * Creates and launches the AstroQuiz application
      */
     public AstroQuiz() {
-        
+        =========
         getPlayerName();
         dbConnect();
         System.out.println(randomObj());       /*******/
-//        createQuestions();
-//        guiStart();
-//        sendQuestion();
+        createQuestions();
+        guiStart();
+        sendQuestion();
     }
     
     /**
