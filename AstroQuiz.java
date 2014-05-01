@@ -25,14 +25,19 @@ public class AstroQuiz {
      *
      * Creates and launches the AstroQuiz application
      */
-    public AstroQuiz() {
-        =========
-        getPlayerName();
-        dbConnect();
-        System.out.println(randomObj());       /*******/
-        createQuestions();
-        guiStart();
-        sendQuestion();
+
+    public AstroQuiz() throws SQLException {
+
+        try{
+            getPlayerName();
+            dbConnect();
+            createQuestions();
+            guiStart();
+            sendQuestion();
+        } finally {
+                connection.close();
+        }
+
     }
     
     /**
@@ -92,7 +97,7 @@ public class AstroQuiz {
     /**
        Randomizes objects to be in questions,
     */
-    private String randomObj() {
+    private String randomObj() throws SQLException {
     	int randTable = (int)Math.random() * 100 % 6;
     	String name;
     	
@@ -124,7 +129,7 @@ public class AstroQuiz {
         try {
             rows = Integer.parseInt(execQuery(countQuery).getString("COUNT(*)"));
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
         String query = ("SELECT * FROM " + name);
     	ResultSet rs = execQuery(query);
@@ -138,8 +143,10 @@ public class AstroQuiz {
                 randName = rs.getString("Name");
             }
         } catch (SQLException e) {
-            System.out.println("Error generating random query.");
+            System.err.println("Error generating random query.");
             e.printStackTrace();
+        } finally {
+            rs.close();
         }
     	return randName;
     	
@@ -148,16 +155,19 @@ public class AstroQuiz {
     /**
       @return Computes the result set for a query
     */
-    private ResultSet execQuery(String query) {
+    private ResultSet execQuery(String query) throws SQLException {
     	ResultSet result = null;
-    	Statement stmt;
+    	Statement stmt = null;
         try {
             stmt = connection.createStatement();
             stmt.setQueryTimeout(10);
             result = stmt.executeQuery(query);
         } catch (Exception e) {
-            System.out.println("Error: execQuery\n");
+            System.err.println("Error: execQuery\n");
             e.printStackTrace();
+        } finally {
+            result.close();
+            stmt.close();
         }
         
         return result;
@@ -177,11 +187,15 @@ public class AstroQuiz {
         try {
             // Set System L&F
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            new AstroQuiz();
+        }
+        catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
         catch (Exception e){
             System.err.println(e.getMessage());
         }
-        new AstroQuiz();
+
     }
     
 }
