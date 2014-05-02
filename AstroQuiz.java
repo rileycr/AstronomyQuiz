@@ -31,6 +31,7 @@ public class AstroQuiz {
         try{
             getPlayerName();
             dbConnect();
+            
             createQuestions();
             guiStart();
             sendQuestion();
@@ -60,7 +61,7 @@ public class AstroQuiz {
         } catch (ClassNotFoundException e){
             System.err.println("Class Not found: org.sqlite.JDBC\n" + e.getMessage());
         } catch (SQLException e) {
-            System.err.println("SQLException: \n" + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -71,15 +72,31 @@ public class AstroQuiz {
     */
     private void createQuestions() {
 
-        String[] options1 = {"Huh?", "Pfffft..", "I Dunno", "OK"};
-        //String[] options2 = {};
         
-        quizQs[0] = new MCQuestion("What?", options1, "B");
-        quizQs[1] = new ResponseQuestion("What is the mass of Earth?", "100");
-        //quizQs[2] = new MCQuestion("What planet has the most moons orbiting it?", options2);
-
-
-        quizQs[2] = null;
+        
+        /*
+            Use randSet(int setSize) to generate a random String[] of planetary objects.
+         
+            ---- How to randomize the order of the set with the actual answer included...?
+         */
+        
+        String[] options1 = {"Jupiter", "Pegasus", "Epsilon Eridani", "Aquarii A"};
+        String[] options2 = {"Eliptical, Cloud, Octagonal", "Eliptical, Cloud, Spiral", "Spiral, Octagonal, Cloud", "Spiral, Eliptical, Octagonal"};
+        String[] options3 = {"Mercury", "Venus", "Earth", "Mars"};
+        String[] options4 = {"Neptune", "Earth", "Mars", "Saturn"};
+        String[] options5 = {"Mars", "Earth", "Neptune", "Saturn"};
+        
+        
+        quizQs[0] = new MCQuestion("Which planet orbits the sun?", options1, "A");
+        quizQs[1] = new MCQuestion("What are the three types of galaxies?", options2, "B");
+        quizQs[2] = new ResponseQuestion("What is the mass of the earth?", "5.9726e24");
+        quizQs[3] = new MCQuestion("Which planet is more massive?", options3, "C");
+        quizQs[4] = new MCQuestion("Which planet has the most moons orbiting it?", options4, "D");
+        quizQs[5] = new MCQuestion("Phobos and Deimos are moons of which planet?", options5, "A");
+        quizQs[6] = new MCQuestion("Triton is the largest moon of what planet?", options5, "C");
+        quizQs[7] = new ResponseQuestion("Sol is a star in which galaxy?", "The Milky Way");
+        quizQs[8] = new MCQuestion("Which planet has the least moons orbiting it?", options4, "B");
+        quizQs[9] = new MCQuestion("Which planet has two moons orbiting it?", options4, "B");
 
     }
 
@@ -106,10 +123,6 @@ public class AstroQuiz {
         
         ArrayList<String> tables = getTableNames();
         
-        for(String s : tables) {
-            System.out.println("Table " + s);
-        }
-        
     	// Get random
         int rTable = (int)Math.random() * tables.size();
     	String table = tables.get(rTable);
@@ -120,10 +133,13 @@ public class AstroQuiz {
         int rows = -1;
         
         try {
-            rows = Integer.parseInt(execQuery(countQuery).getString("COUNT(*)"));
+            ResultSet rs = execQuery(countQuery);
+            rows = Integer.parseInt(rs.getString("COUNT(*)"));
+            rs.close();
         }
         catch (Exception e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
+
         }
         // Prepare and execute query
         String query = ("SELECT * FROM " + table);
@@ -139,13 +155,27 @@ public class AstroQuiz {
                 randName = rs.getString("Name");
             }
         } catch (SQLException e) {
-            System.err.println("Error generating random query.");
             e.printStackTrace();
         } finally {
             rs.close();
         }
     	return randName;
-    	
+    }
+    
+    String[] randSet(int num) {
+        String answerSet[] = new String[num];
+        for(int i = 0; (i < num); i++) {
+            String s = "";
+            while(s == "") {
+                try{
+                    s = randomObj();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            answerSet[i] = s;
+        }
+        return answerSet;
     }
     
     
@@ -159,9 +189,10 @@ public class AstroQuiz {
         try {
             try {
                 DatabaseMetaData md = connection.getMetaData();
-                rs = md.getTables(null, null, "%", null);
+                String[] types = {"TABLE"};
+                rs = md.getTables(null, null, "%", types);
                 while (rs.next()) {
-                    tables.add(rs.getString(3));
+                    tables.add(rs.getString("TABLE_NAME"));
                 }
             }
             finally {
@@ -171,7 +202,7 @@ public class AstroQuiz {
             }
         }
         catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
         
         return tables;
@@ -192,16 +223,11 @@ public class AstroQuiz {
                 result = stmt.executeQuery(query);
             }
             catch (Exception e) {
-                System.err.println("Error: execQuery\n");
                 e.printStackTrace();
-            }
-            finally {
-                result.close();
-                stmt.close();
             }
         }
         catch(Exception e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
         return result;
 
@@ -224,10 +250,10 @@ public class AstroQuiz {
             new AstroQuiz();
         }
         catch (SQLException e) {
-            System.err.println(e.getMessage());
+            System.err.println("Error: main() -- SQLException -->  " + e.getMessage());
         }
         catch (Exception e){
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
     }
