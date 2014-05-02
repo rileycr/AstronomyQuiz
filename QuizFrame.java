@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.text.*;
 import javax.swing.*;
 
 /**
@@ -32,6 +33,7 @@ public class QuizFrame extends JFrame {
     
     private ButtonListener bListen;
 
+    private DecimalFormat df = new DecimalFormat("#.##");
     private int questionNumber;
     private int numCorrect;
     
@@ -52,7 +54,7 @@ public class QuizFrame extends JFrame {
      */
     public void editQuestion(Question newQuestion, int qCount){
         if(newQuestion == null){
-            updateNumCorrect();
+            updateQAccuracy();
             JOptionPane.showMessageDialog(this, "You've completed your quiz!! you got a\n\n"+grade()+"%", "OK "+player+"!", JOptionPane.PLAIN_MESSAGE);
         } else {
             questionPane.setText(newQuestion.displayQuestion());
@@ -73,9 +75,10 @@ public class QuizFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "You rock "+player+"!!!", "You did something right!!!", JOptionPane.PLAIN_MESSAGE);
             updateNumCorrect();
         } else {
-            JOptionPane.showMessageDialog(this, "You can do better "+player+"!", "You did something WRONG!!!", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(this, "You can do better "+player+"!\nThe answer was: "+quiz.getCorrectAnswer(questionNumber), "You did something WRONG!!!", JOptionPane.PLAIN_MESSAGE);
         }
 
+        updateQAccuracy();
         quiz.sendQuestion();
     }
 
@@ -98,14 +101,15 @@ public class QuizFrame extends JFrame {
        Updates the question progress counter
     */
     private void updateQProgress(){
-        infoQuestionProgress.setText("Question "+(questionNumber + 1)+" of 10\t\t");
+        infoQuestionProgress.setText("Question "+(questionNumber + 1)+" of 10\t     ");
     }
 
     /**
        @return the accuracy of the user in %
     */
-    private double grade(){
-        return ((numCorrect*1.0)/(questionNumber+1.0)*100);
+    private String grade(){
+        double percent = (numCorrect*1.0)/(questionNumber+1.0)*100.0;
+        return df.format(percent);
     }
 
     /**
@@ -116,6 +120,7 @@ public class QuizFrame extends JFrame {
         public void actionPerformed(ActionEvent e){
             if (e.getSource().equals(submitButton)){
                 sendResponse(responseField.getText());
+                responseField.setText("");
             } else if(e.getSource().equals(choiceA)) {
                 sendResponse("A");
             } else if(e.getSource().equals(choiceB)) {

@@ -16,7 +16,7 @@ public class AstroQuiz {
     private QuizFrame guiFrame;
     public Connection connection;
     private int qCount = 0;		// running count of the question
-    private static Question[] quizQs = new Question[10];
+    private static Question[] quizQs = new Question[11];
     
     /***************************************************************************/
     
@@ -96,7 +96,9 @@ public class AstroQuiz {
         quizQs[6] = new MCQuestion("Triton is the largest moon of what planet?", options5, "C");
         quizQs[7] = new ResponseQuestion("Sol is a star in which galaxy?", "The Milky Way");
         quizQs[8] = new MCQuestion("Which planet has the least moons orbiting it?", options4, "B");
-        quizQs[9] = new MCQuestion("Which planet has two moons orbiting it?", options4, "B");
+        quizQs[9] = new MCQuestion("Which planet has two moons orbiting it?", options4, "C");
+
+        quizQs[10] = null;
 
     }
 
@@ -114,6 +116,10 @@ public class AstroQuiz {
     public static boolean processResponse(String response, int qNumber) {
         
         return quizQs[qNumber].isCorrect(response);
+    }
+
+    public String getCorrectAnswer(int qNumber){
+        return quizQs[qNumber].getAnswer();
     }
     
     /**

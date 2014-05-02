@@ -18,7 +18,7 @@ public class ResponseQuestion extends Question {
       @return if the response is correct
     */
     public boolean isCorrect(String response){
-    	return response.equals(this.getAnswer());
+    	return (this.getAnswer().contains(response) && !response.equals(""));
     }
 
     /**
