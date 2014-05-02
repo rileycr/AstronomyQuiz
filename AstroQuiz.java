@@ -42,10 +42,11 @@ public class AstroQuiz {
     }
     
     /**
-     * Create intro dialogue to retrieve player name
+     * Create intro dialogue to retrieve player name, only takes the first
+     * 30 characters.
      */
     private void getPlayerName() {
-    	playerName = JOptionPane.showInputDialog("Welcome! Please enter your name");
+    	playerName = JOptionPane.showInputDialog("Welcome! Please enter your name").substring(0, 30);
     }
     
     /**

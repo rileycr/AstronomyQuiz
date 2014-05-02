@@ -55,7 +55,7 @@ public class QuizFrame extends JFrame {
     public void editQuestion(Question newQuestion, int qCount){
         if(newQuestion == null){
             updateQAccuracy();
-            JOptionPane.showMessageDialog(this, "You've completed your quiz!! you got a\n\n"+grade()+"%", "OK "+player+"!", JOptionPane.PLAIN_MESSAGE);
+            endQuiz();
         } else {
             questionPane.setText(newQuestion.displayQuestion());
             this.questionNumber = qCount;
@@ -112,6 +112,12 @@ public class QuizFrame extends JFrame {
         return df.format(percent);
     }
 
+    private void endQuiz(){
+        JOptionPane.showMessageDialog(this, "You've completed your quiz!! you got a\n\n"+grade()+"%", "OK "+player+"!", JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Goodbye!", "", JOptionPane.PLAIN_MESSAGE);
+        System.exit(0);
+    }
+
     /**
        Subclass that listens to all the buttons in the GUI
     */
@@ -130,7 +136,7 @@ public class QuizFrame extends JFrame {
             } else if(e.getSource().equals(choiceD)) {
                 sendResponse("D");
             } else if (e.getSource().equals(quitButton)){
-                System.exit(0);
+                endQuiz();
             }
         }
     }
