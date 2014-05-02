@@ -46,7 +46,8 @@ public class AstroQuiz {
      * 30 characters.
      */
     private void getPlayerName() {
-    	playerName = JOptionPane.showInputDialog("Welcome! Please enter your name").substring(0, 30);
+        String name = JOptionPane.showInputDialog("Welcome! Please enter your name"); 
+    	playerName = name.substring(0, Math.min(name.length(), 30));
     }
     
     /**
