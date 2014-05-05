@@ -30,6 +30,13 @@ public class QuizFrame extends JFrame {
     private JButton choiceB;
     private JButton choiceC;
     private JButton choiceD;
+    private JButton planetButton;
+    private JButton starButton;
+    private JButton moonButton;
+    private JButton asteroidButton;
+    private JButton cometButton;
+    private JButton constellationButton;
+    private JButton galaxyButton;
     
     private ButtonListener bListen;
 
@@ -135,7 +142,21 @@ public class QuizFrame extends JFrame {
                 sendResponse("C");
             } else if(e.getSource().equals(choiceD)) {
                 sendResponse("D");
-            } else if (e.getSource().equals(quitButton)){
+            } else if (e.getSource().equals(planetButton)) {
+                System.out.println("planet");
+            } else if (e.getSource().equals(starButton)) {
+                System.out.println("star");
+            } else if (e.getSource().equals(moonButton)) {
+                System.out.println("moon");
+            } else if (e.getSource().equals(asteroidButton)) {
+                System.out.println("asteroid");
+            } else if (e.getSource().equals(cometButton)) {
+                System.out.println("comet");
+            } else if (e.getSource().equals(constellationButton)) {
+                System.out.println("constellation");
+            } else if (e.getSource().equals(galaxyButton)) {
+                System.out.println("galaxy");
+            } else if (e.getSource().equals(quitButton)) {
                 endQuiz();
             }
         }
@@ -216,6 +237,47 @@ public class QuizFrame extends JFrame {
         centerLayout.putConstraint(SpringLayout.WEST, extraPanel, -223, SpringLayout.EAST, centerPanel);
         centerLayout.putConstraint(SpringLayout.EAST, extraPanel, 0, SpringLayout.EAST, centerPanel);
         centerPanel.add(extraPanel);
+        extraPanel.setLayout(new BorderLayout(0, 0));
+        JTextPane dbQueryLabel = new JTextPane();
+        dbQueryLabel.setEditable(false);
+        dbQueryLabel.setText("Database Query Tool");
+        extraPanel.add(dbQueryLabel, BorderLayout.NORTH);
+        JPanel queryPanel = new JPanel();
+        extraPanel.add(queryPanel, BorderLayout.CENTER);
+        
+        JTextPane queryTextPane = new JTextPane();
+        queryTextPane.setEditable(false);
+        queryTextPane.setText("What do you want to learn about?");
+        
+        planetButton = new JButton("Planets");
+        planetButton.addActionListener(bListen);
+        
+        starButton = new JButton("Stars");
+        starButton.addActionListener(bListen);
+        
+        moonButton = new JButton("Moons");
+        moonButton.addActionListener(bListen);
+        
+        asteroidButton = new JButton("Asteroids");
+        asteroidButton.addActionListener(bListen);
+        
+        cometButton = new JButton("Comets");
+        cometButton.addActionListener(bListen);
+        
+        constellationButton = new JButton("Constellations");
+        constellationButton.addActionListener(bListen);
+        
+        galaxyButton = new JButton("Galaxies");
+        galaxyButton.addActionListener(bListen);
+
+        queryPanel.add(queryTextPane);
+        queryPanel.add(planetButton);
+        queryPanel.add(starButton);
+        queryPanel.add(moonButton);
+        queryPanel.add(asteroidButton);
+        queryPanel.add(cometButton);
+        queryPanel.add(constellationButton);
+        queryPanel.add(galaxyButton);
 
         //The panel to contain the multiple choice buttons
         buttonPanel = new JPanel();

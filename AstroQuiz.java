@@ -69,8 +69,6 @@ public class AstroQuiz {
 
     /**
        Currently in testing phase, creates questions to send to the GUI
-       
-       *******New protocol: make the item after the last question null*********
     */
     private void createQuestions() {
 
@@ -81,13 +79,28 @@ public class AstroQuiz {
          
             ---- How to randomize the order of the set with the actual answer included...?
          */
-        
+
+        String[] options1 = randSet(4);
+        options1[0]="Jupiter";
+        String[] options2 = randSet(4);
+        options2[1]="Eliptical, Cloud, Spiral";
+        String[] options3 = randSet(4);
+        options3[2] = "Earth";
+        String[] options4 = randSet(4);
+        options4[3] = "Saturn";
+        options4[2] = "Mars";
+        options4[1] = "Neptune";
+        String[] options5 = randSet(4);
+        options5[0] = "Mars";
+        options5[2] = "Neptune";
+
+        /*
         String[] options1 = {"Jupiter", "Pegasus", "Epsilon Eridani", "Aquarii A"};
         String[] options2 = {"Eliptical, Cloud, Octagonal", "Eliptical, Cloud, Spiral", "Spiral, Octagonal, Cloud", "Spiral, Eliptical, Octagonal"};
         String[] options3 = {"Mercury", "Venus", "Earth", "Mars"};
         String[] options4 = {"Neptune", "Earth", "Mars", "Saturn"};
         String[] options5 = {"Mars", "Earth", "Neptune", "Saturn"};
-        
+        */
         
         quizQs[0] = new MCQuestion("Which planet orbits the sun?", options1, "A");
         quizQs[1] = new MCQuestion("What are the three types of galaxies?", options2, "B");
@@ -170,7 +183,7 @@ public class AstroQuiz {
     	return randName;
     }
     
-    String[] randSet(int num) {
+    private String[] randSet(int num) {
         String answerSet[] = new String[num];
         for(int i = 0; (i < num); i++) {
             String s = "";
