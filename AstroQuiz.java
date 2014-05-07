@@ -19,7 +19,10 @@ public class AstroQuiz {
 
     public Connection connection;
     private int qCount = 0;  // running count of the question
+<<<<<<< HEAD
 
+=======
+>>>>>>> FETCH_HEAD
     private static Question[] quizQs = new Question[11];
     Random random = new Random();
     
