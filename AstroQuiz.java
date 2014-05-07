@@ -2,6 +2,8 @@ import java.sql.*;
 import java.awt.*;
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.*;
+import java.lang.*;
 /**
  Authors:  Gavin Golden, Mark Gudorf, Victoria McIe, Cooper Riley
  Class: CSE 385
@@ -9,14 +11,15 @@ import java.util.ArrayList;
  Instructor: Dr. Inclezan
  */
 public class AstroQuiz {
-	
-    /******************		Member Variables	*************************/
+ 
+    /******************  Member Variables *************************/
 
     private String playerName;
     private QuizFrame guiFrame;
     public Connection connection;
-    private int qCount = 0;		// running count of the question
+    private int qCount = 0;  // running count of the question
     private static Question[] quizQs = new Question[11];
+    Random random = new Random();
     
     /***************************************************************************/
     
@@ -47,7 +50,7 @@ public class AstroQuiz {
      */
     private void getPlayerName() {
         String name = JOptionPane.showInputDialog("Welcome! Please enter your name"); 
-    	playerName = name.substring(0, Math.min(name.length(), 30));
+     playerName = name.substring(0, Math.min(name.length(), 30));
     }
     
     /**
@@ -66,7 +69,69 @@ public class AstroQuiz {
             e.printStackTrace();
         }
     }
-
+    /** Randomly selects a question type to generate -MFG*/
+    
+    private Question makeQuestion(){
+      String[] defaultInfo = {"Earth","Moon","Pegasus","Pluto"};
+      Question question;
+      try{
+      switch(random.nextInt(1) + 1) {
+        case 1: question = makeSunOrbitQuestion();
+        break;
+        default: question = new MCQuestion("Which planet orbits the sun?", defaultInfo, "Earth");
+      }
+      return question;
+      } catch (Exception e){
+        System.out.println(e.getMessage());
+        question =  new MCQuestion("Which planet orbits the sun?", defaultInfo, "Earth");
+      }
+      return question;
+    }
+    
+    /** Generates question by querying database */
+    private Question makeSunOrbitQuestion() throws SQLException{
+      String[] defaultInfo = {"Earth","Moon","Pegasus","Pluto"};
+      ResultSet planets = execQuery("SELECT Name FROM Planet");
+      ArrayList<String> planetNames = new ArrayList<String>();
+      do{
+        planetNames.add(planets.getString("Name"));
+      } while (planets.next());
+      String correctPlanet = planetNames.get(random.nextInt(planetNames.size()));
+      String[] questionInfo = new String[4];
+      questionInfo[0] = correctPlanet;
+      System.out.println("Correct Planet: " + correctPlanet);
+      int count = 1;
+      while(count < 4){
+        String wrongPlanet = planetNames.get(random.nextInt(planetNames.size()));
+        System.out.println("Count: " + count + " \nWrong Planet: " + wrongPlanet);
+        if(!(wrongPlanet.equals(correctPlanet))){
+          questionInfo[count] = wrongPlanet;
+          count++;
+        }
+      }
+      String query = "SELECT Orbits FROM Planet WHERE Name = \"";
+      String finalQuery = query.concat(correctPlanet);
+      finalQuery = finalQuery.concat("\";");
+      System.out.println("Query: " + finalQuery);
+      ResultSet starName = execQuery(finalQuery);
+      Collections.shuffle(Arrays.asList(questionInfo));
+      String answerLetter = "";
+      if(questionInfo[0].equals(correctPlanet)){
+        answerLetter = "A";
+      } else if (questionInfo[1].equals(correctPlanet)){
+        answerLetter = "B";
+      } else if (questionInfo[2].equals(correctPlanet)){
+        answerLetter = "C";
+      } else {
+        answerLetter = "D";
+      }
+        
+      return new MCQuestion("Which planet orbits the star \"" + starName.getString("Orbits") + "\"?", questionInfo, answerLetter);
+      //return new MCQuestion("Which planet orbits the sun?", defaultInfo, "Earth");
+               
+               
+    }
+      
     /**
        Currently in testing phase, creates questions to send to the GUI
     */
@@ -99,7 +164,8 @@ public class AstroQuiz {
         options5[2] = "Neptune";
 
 
-        quizQs[0] = new MCQuestion("Which planet orbits the sun?", options1, options1[4]);
+        //quizQs[0] = new MCQuestion("Which planet orbits the sun?", options1, options1[4]);
+        quizQs[0] = makeQuestion();
         quizQs[1] = new MCQuestion("What are the three types of galaxies?", options2, options2[4]);
         quizQs[2] = new ResponseQuestion("What is the mass of the earth?", "5.9726e24");
         quizQs[3] = new MCQuestion("Which planet is more massive?", options3, options3[4]);
@@ -157,17 +223,17 @@ public class AstroQuiz {
         
         ArrayList<String> tables = getTableNames();
         
-    	// Get random
+     // Get random
         String table = "";
         do {
             int rTable = (int)(Math.random() * tables.size());
             table = tables.get(rTable);
             System.out.println("Table: " + table);
         } while (table.equals(not));
-    	
+     
 
         // Find the number of rows in the upcoming result set.
-    	String countQuery = "SELECT COUNT(*) FROM " + table;
+     String countQuery = "SELECT COUNT(*) FROM " + table;
         int rows = -1;
         
         try {
@@ -181,14 +247,14 @@ public class AstroQuiz {
         }
         // Prepare and execute query
         String query = ("SELECT * FROM " + table);
-    	ResultSet rs = execQuery(query);
-    	
-    	String randName = "";
-    	
+     ResultSet rs = execQuery(query);
+     
+     String randName = "";
+     
         // Get object name from random row in result set
-    	int rand = (int)(Math.random() * rows);
+     int rand = (int)(Math.random() * rows);
         
-    	try {
+     try {
             for(int i = 0; (i < rand && rs.next()); i++) {
                 randName = rs.getString("Name");
             }
@@ -197,7 +263,7 @@ public class AstroQuiz {
         } finally {
             rs.close();
         }
-    	return randName;
+     return randName;
     }
     
     private String[] randSet(int num, String not) { /***** changed 'not'*****/
@@ -282,6 +348,7 @@ public class AstroQuiz {
      * PROGRAM LAUNCH.
      */
     public static void main(String[] args){
+      System.out.println("Running");
         try {
             // Set System L&F
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
