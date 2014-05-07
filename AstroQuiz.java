@@ -142,13 +142,14 @@ public class AstroQuiz {
             Query q1 = new Query(count % 2);
             
             // Small database frequently has insufficient information to populate answers
-            while(q1.options[0] == null ||
+            while(!q1.valid ||
+                  q1.options[0] == null ||
                   q1.options[1] == null ||
                   q1.options[2] == null ||
                   q1.options[3] == null) {
                 
                 System.out.println("Creating new question....");
-                q1 = new Query(count & 2);
+                q1 = new Query(count % 2);
             }
             quizQs[count] = new MCQuestion(q1.question, q1.options, q1.options[4]);
             count ++;

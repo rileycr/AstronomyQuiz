@@ -8,7 +8,7 @@ public class Query {
     String question;
     ArrayList<String> args;
     String[] options;
-    String answer;
+    boolean valid;
     
     static String[] answerChars = {"A","B","C","D"};
     
@@ -22,6 +22,7 @@ public class Query {
     
     
     public void createQuestion() {
+        int rand = 0;
         String object;
         switch(qType) {
                 
@@ -31,7 +32,7 @@ public class Query {
                 // Class of object above
                 String oType;
                 
-                int rand = (int)(Math.random() * 2);
+                rand = (int)(Math.random() * 2);
                 if(rand == 0) {
                     oType = "star";
                     orbited = randObject(oType);
@@ -50,12 +51,16 @@ public class Query {
                 //System.out.println("Main Query: " + query);
                 ResultSet rs = execQuery(query);
                 
-                genAnswers("*", oClass, " WHERE orbits <>'" + orbited + "'");
+                genAnswers("*", oClass, " WHERE orbits NOT LIKE '" + orbited + "'");
                 try {
                     if(rs.next()) {
                         options[3] = rs.getString("Name");
+                        valid = true;
+                        System.out.println("Valid..");
+                    } else {
+                        valid = false;
+                        System.out.println("Empty Set..");
                     }
-                    answer = options[3];
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -64,15 +69,15 @@ public class Query {
 //                    System.out.print(s + ", ");
 //                }
                 
-                int r = (int)(Math.random() * 3);
-                final String temp = options[r];
-                options[r] = options[3];
+                rand = (int)(Math.random() * 3);
+                final String temp = options[rand];
+                options[rand] = options[3];
                 options[3] = temp;
-                options[4] = answerChars[r];
+                options[4] = answerChars[rand];
                 break;
                 
             case 1:
-                System.out.println("\n\n\nCASE 1 Question!!!\n");
+                System.out.println("\n\nCASE 1 Question!!!");
                 ArrayList<String> tableNames = getTableNames();
                 String table = "";
                 do {
@@ -109,8 +114,11 @@ public class Query {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                answer = options[index];
-                System.out.println("Answer set to: " + answer + "\n\n");
+                
+                if(options[index] != null) {
+                    valid = true;
+                }
+                System.out.println("Answer set to: " + options[index] + "\n\n");
                 options[4] = answerChars[index];
                 
                 break;
@@ -147,7 +155,6 @@ public class Query {
             for(int i = 0; i < 4; i++) {
                 if(rs.next()) {
                     options[i] = rs.getString("name");
-                    //System.out.println("Options: " + options[i]);
                 }
             }
         } catch (Exception e) {
@@ -211,13 +218,10 @@ public class Query {
             
         } else {
             int rand = 0;
-            if(!name.toLowerCase().equals("sun")) {
+            if(name.toLowerCase().equals("sun")) {
                     rand = (int)(Math.random() * 3);
             } else {
                 rand = (int)(Math.random() * 2);
-            }
-            if(rand != 1) {
-                System.out.println("RAND TYPE = " + rand + "!!!!!");
             }
             switch(rand) {
                 case 0:
@@ -227,6 +231,7 @@ public class Query {
                 case 2:
                     return "planet";
                 default:
+                    System.out.println("randOrbiter, rand = " + rand + "!??!?!!");
                     return "";
             }
         }
