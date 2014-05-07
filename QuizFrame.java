@@ -23,6 +23,7 @@ public class QuizFrame extends JFrame {
     private JPanel qResultPanel;
     private JPanel queryPanel;
     private JTextPane questionPane;
+    private JTextPane qResultDisplay;
     private JTextField responseField;
     private JTextArea infoQuestionProgress;
     private JTextArea infoAccuracy;
@@ -77,6 +78,7 @@ public class QuizFrame extends JFrame {
             buttonPanel.setVisible(mcQuestion);
         }
     }
+
 
     /**
        Sends the response to the user's answer
@@ -136,15 +138,19 @@ public class QuizFrame extends JFrame {
         if(queryPanelShowing){
             extraPanel.remove(queryPanel);
             extraPanel.add(qResultPanel, BorderLayout.CENTER);
-            System.out.println("Added result");
-
         } else {
             extraPanel.remove(qResultPanel);
             extraPanel.add(queryPanel, BorderLayout.CENTER);
-            System.out.println("Added queryPanel");
         }
         extraPanel.revalidate();
         extraPanel.repaint();
+    }
+
+    /**
+       Displays the basic info on the right panel
+    */
+    public void editQResultDisplay(String text){
+        qResultDisplay.setText(text);
     }
 
     /**
@@ -165,26 +171,26 @@ public class QuizFrame extends JFrame {
             } else if(e.getSource().equals(choiceD)) {
                 sendResponse("D");
             } else if (e.getSource().equals(planetButton)) {
-                System.out.println("planet");
                 changeExtraDisplay(true);
+                quiz.displayBasic("planet");
             } else if (e.getSource().equals(starButton)) {
-                System.out.println("star");
                 changeExtraDisplay(true);
+                quiz.displayBasic("star");
             } else if (e.getSource().equals(moonButton)) {
-                System.out.println("moon");
                 changeExtraDisplay(true);
+                quiz.displayBasic("moon");
             } else if (e.getSource().equals(asteroidButton)) {
-                System.out.println("asteroid");
                 changeExtraDisplay(true);
+                quiz.displayBasic("asteroid");
             } else if (e.getSource().equals(cometButton)) {
-                System.out.println("comet");
                 changeExtraDisplay(true);
+                quiz.displayBasic("comet");
             } else if (e.getSource().equals(constellationButton)) {
-                System.out.println("constellation");
                 changeExtraDisplay(true);
+                quiz.displayBasic("constellation");
             } else if (e.getSource().equals(galaxyButton)) {
-                System.out.println("galaxy");
                 changeExtraDisplay(true);
+                quiz.displayBasic("galaxy");
             } else if (e.getSource().equals(resultGoBack)) {
                 changeExtraDisplay(false);
             } else if (e.getSource().equals(quitButton)) {
@@ -276,10 +282,12 @@ public class QuizFrame extends JFrame {
         extraPanel.add(dbQueryLabel, BorderLayout.NORTH);
         
         queryPanel = new JPanel(new FlowLayout());
-        qResultPanel = new JPanel(new FlowLayout());
+        qResultPanel = new JPanel(new BorderLayout(0,0));
         resultGoBack = new JButton("Go Back");
-        qResultPanel.add(resultGoBack);
         resultGoBack.addActionListener(bListen);
+        qResultDisplay = new JTextPane();
+        qResultPanel.add(resultGoBack, BorderLayout.NORTH);
+        qResultPanel.add(qResultDisplay, BorderLayout.CENTER);
 
         extraPanel.add(queryPanel, BorderLayout.CENTER);
         

@@ -38,8 +38,8 @@ public class AstroQuiz {
             createQuestions();
             guiStart();
             sendQuestion();
-        } finally {
-                connection.close();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
 
     }
@@ -196,11 +196,24 @@ public class AstroQuiz {
         return quizQs[qNumber].isCorrect(response);
     }
 
+    /**
+       @return the correct answer to a question
+    */
     public String getCorrectAnswer(int qNumber){
         return quizQs[qNumber].getAnswer();
     }
-    
-    
+
+    /**
+       Called by the GUI to get basic info from the database
+    */
+    public void displayBasic(String table){
+        System.out.println("Printing "+table);
+        
+        String testQ = ("SELECT * FROM "+table);
+        ResultSet test = execQuery(testQ);
+        
+        guiFrame.editQResultDisplay(table);
+    }
     
     private String[] randInsert(String answers[], String correct) {
         String letters[] = {"A", "B", "C", "D"};
@@ -321,7 +334,6 @@ public class AstroQuiz {
         ResultSet result = null;
         try {
             Statement stmt = connection.createStatement();
-            stmt.setQueryTimeout(10);
             
             try {
                 result = stmt.executeQuery(query);
