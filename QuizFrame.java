@@ -19,7 +19,11 @@ public class QuizFrame extends JFrame {
     
     private JPanel buttonPanel;
     private JPanel northPanel;
+    private JPanel extraPanel;
+    private JPanel qResultPanel;
+    private JPanel queryPanel;
     private JTextPane questionPane;
+    private JTextPane qResultDisplay;
     private JTextField responseField;
     private JTextArea infoQuestionProgress;
     private JTextArea infoAccuracy;
@@ -37,6 +41,7 @@ public class QuizFrame extends JFrame {
     private JButton cometButton;
     private JButton constellationButton;
     private JButton galaxyButton;
+    private JButton resultGoBack;
     
     private ButtonListener bListen;
 
@@ -51,8 +56,8 @@ public class QuizFrame extends JFrame {
         super(player + "'s Astronomy Quiz");
         this.quiz = quiz;
         this.numCorrect = 0;
-        bListen = new ButtonListener();
         this.player = player;
+        bListen = new ButtonListener();
         setupGUI();
     }
     
@@ -73,6 +78,7 @@ public class QuizFrame extends JFrame {
             buttonPanel.setVisible(mcQuestion);
         }
     }
+
 
     /**
        Sends the response to the user's answer
@@ -126,6 +132,28 @@ public class QuizFrame extends JFrame {
     }
 
     /**
+       For the extra panel, changes what is displayed
+    */
+    private void changeExtraDisplay(boolean queryPanelShowing){
+        if(queryPanelShowing){
+            extraPanel.remove(queryPanel);
+            extraPanel.add(qResultPanel, BorderLayout.CENTER);
+        } else {
+            extraPanel.remove(qResultPanel);
+            extraPanel.add(queryPanel, BorderLayout.CENTER);
+        }
+        extraPanel.revalidate();
+        extraPanel.repaint();
+    }
+
+    /**
+       Displays the basic info on the right panel
+    */
+    public void editQResultDisplay(String text){
+        qResultDisplay.setText(text);
+    }
+
+    /**
        Subclass that listens to all the buttons in the GUI
     */
     public class ButtonListener implements ActionListener {
@@ -143,24 +171,34 @@ public class QuizFrame extends JFrame {
             } else if(e.getSource().equals(choiceD)) {
                 sendResponse("D");
             } else if (e.getSource().equals(planetButton)) {
-                System.out.println("planet");
+                changeExtraDisplay(true);
+                quiz.displayBasic("planet");
             } else if (e.getSource().equals(starButton)) {
-                System.out.println("star");
+                changeExtraDisplay(true);
+                quiz.displayBasic("star");
             } else if (e.getSource().equals(moonButton)) {
-                System.out.println("moon");
+                changeExtraDisplay(true);
+                quiz.displayBasic("moon");
             } else if (e.getSource().equals(asteroidButton)) {
-                System.out.println("asteroid");
+                changeExtraDisplay(true);
+                quiz.displayBasic("asteroid");
             } else if (e.getSource().equals(cometButton)) {
-                System.out.println("comet");
+                changeExtraDisplay(true);
+                quiz.displayBasic("comet");
             } else if (e.getSource().equals(constellationButton)) {
-                System.out.println("constellation");
+                changeExtraDisplay(true);
+                quiz.displayBasic("constellation");
             } else if (e.getSource().equals(galaxyButton)) {
-                System.out.println("galaxy");
+                changeExtraDisplay(true);
+                quiz.displayBasic("galaxy");
+            } else if (e.getSource().equals(resultGoBack)) {
+                changeExtraDisplay(false);
             } else if (e.getSource().equals(quitButton)) {
                 endQuiz();
             }
         }
     }
+
     
     /**
        Remaining code draws the GUI
@@ -232,7 +270,7 @@ public class QuizFrame extends JFrame {
         centerPanel.add(questionPane);
 
         //A panel to add extra items in the future
-        JPanel extraPanel = new JPanel();
+        extraPanel = new JPanel();
         centerLayout.putConstraint(SpringLayout.NORTH, extraPanel, 0, SpringLayout.NORTH, centerPanel);
         centerLayout.putConstraint(SpringLayout.WEST, extraPanel, -223, SpringLayout.EAST, centerPanel);
         centerLayout.putConstraint(SpringLayout.EAST, extraPanel, 0, SpringLayout.EAST, centerPanel);
@@ -242,7 +280,15 @@ public class QuizFrame extends JFrame {
         dbQueryLabel.setEditable(false);
         dbQueryLabel.setText("Database Query Tool");
         extraPanel.add(dbQueryLabel, BorderLayout.NORTH);
-        JPanel queryPanel = new JPanel();
+        
+        queryPanel = new JPanel(new FlowLayout());
+        qResultPanel = new JPanel(new BorderLayout(0,0));
+        resultGoBack = new JButton("Go Back");
+        resultGoBack.addActionListener(bListen);
+        qResultDisplay = new JTextPane();
+        qResultPanel.add(resultGoBack, BorderLayout.NORTH);
+        qResultPanel.add(qResultDisplay, BorderLayout.CENTER);
+
         extraPanel.add(queryPanel, BorderLayout.CENTER);
         
         JTextPane queryTextPane = new JTextPane();
