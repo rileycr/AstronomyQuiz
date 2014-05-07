@@ -14,7 +14,7 @@ public class AstroQuiz {
 
     private String playerName;
     private QuizFrame guiFrame;
-    public Connection connection;
+    public static Connection connection;
     private int qCount = 0;		// running count of the question
     private static Question[] quizQs = new Question[11];
     
@@ -79,7 +79,7 @@ public class AstroQuiz {
          
             ---- How to randomize the order of the set with the actual answer included...?
          */
-
+/*
         String[] options1 = randSet(4, "Planet");
         options1 = randInsert(options1, "Jupiter");
         
@@ -97,10 +97,18 @@ public class AstroQuiz {
         String[] options5 = randSet(4, "");
         options5[0] = "Mars";
         options5[2] = "Neptune";
+*/
 
-
-        quizQs[0] = new MCQuestion("Which planet orbits the sun?", options1, options1[4]);
-        quizQs[1] = new MCQuestion("What are the three types of galaxies?", options2, options2[4]);
+        int count = 0;
+        while (count < 5) {
+            Query q1 = new Query(0);
+            while(q1.answer == null) {
+                q1 = new Query(0);
+            }
+            quizQs[count] = new MCQuestion(q1.question, q1.options, q1.options[4]);
+            count ++;
+        }
+        /*quizQs[1] = new MCQuestion("What are the three types of galaxies?", options2, options2[4]);
         quizQs[2] = new ResponseQuestion("What is the mass of the earth?", "5.9726e24");
         quizQs[3] = new MCQuestion("Which planet is more massive?", options3, options3[4]);
         quizQs[4] = new MCQuestion("Which planet has the most moons orbiting it?", options4, "D");
@@ -109,7 +117,7 @@ public class AstroQuiz {
         quizQs[7] = new ResponseQuestion("Sol is a star in which galaxy?", "The Milky Way");
         quizQs[8] = new MCQuestion("Which planet has the least moons orbiting it?", options4, "B");
         quizQs[9] = new MCQuestion("Which planet has two moons orbiting it?", options4, "C");
-
+*/
         quizQs[10] = null;
 
     }
@@ -162,7 +170,6 @@ public class AstroQuiz {
         do {
             int rTable = (int)(Math.random() * tables.size());
             table = tables.get(rTable);
-            System.out.println("Table: " + table);
         } while (table.equals(not));
     	
 
@@ -250,7 +257,7 @@ public class AstroQuiz {
     /**
       @return Computes the result set for a query
     */
-    private ResultSet execQuery(String query) {
+    public ResultSet execQuery(String query) {
 
         ResultSet result = null;
         try {
