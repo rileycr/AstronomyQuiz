@@ -101,11 +101,10 @@ public class AstroQuiz {
         String correctPlanet = planetNames.get(random.nextInt(planetNames.size()));
         String[] questionInfo = new String[4];
         questionInfo[0] = correctPlanet;
-        System.out.println("Correct Planet: " + correctPlanet);
         int count = 1;
         while(count < 4){
             String wrongPlanet = planetNames.get(random.nextInt(planetNames.size()));
-            System.out.println("Count: " + count + " \nWrong Planet: " + wrongPlanet);
+   
             if(!(wrongPlanet.equals(correctPlanet))){
                 questionInfo[count] = wrongPlanet;
                 count++;
@@ -114,7 +113,6 @@ public class AstroQuiz {
         String query = "SELECT Orbits FROM Planet WHERE Name = \"";
         String finalQuery = query.concat(correctPlanet);
         finalQuery = finalQuery.concat("\";");
-        System.out.println("Query: " + finalQuery);
         ResultSet starName = execQuery(finalQuery);
         Collections.shuffle(Arrays.asList(questionInfo));
         String answerLetter = "";
@@ -148,7 +146,6 @@ public class AstroQuiz {
                   q1.options[2] == null ||
                   q1.options[3] == null) {
                 
-                System.out.println("Creating new question....");
                 q1 = new Query(count % 2);
             }
             quizQs[count] = new MCQuestion(q1.question, q1.options, q1.options[4]);
@@ -186,14 +183,62 @@ public class AstroQuiz {
        Called by the GUI to get basic info from the database
     */
     public void displayBasic(String table){
-        System.out.println("Printing "+table);
-        
-        String testQ = ("SELECT * FROM "+table);
-        ResultSet test = execQuery(testQ);
 
+        String displayQuery = generateQuery(table);
+        String displayOutput = "";
+
+        try{
+            ResultSet test = execQuery(displayQuery);
+            
+            if(table.equals("planet")) {
+                displayOutput += String.format("%-12s %-12s %-12s", "Planet", "Star", "#-Moons\n");
+                while(test.next()){
+                    displayOutput += String.format("%-12s %-12s %-12s", test.getString("name"), test.getString("orbits"), test.getInt("Moons"));
+                    displayOutput += "\n";
+                }
+            } else if (table.equals("star")) {
+                
+            } else if (table.equals("moon")) {
+                
+            } else if (table.equals("asteroid")) {
+                
+            } else if (table.equals("comet")) {
+                
+            } else if (table.equals("constellation")) {
+                
+            } else {
+                
+            }
+            
+        } catch(Exception e){
+            System.err.println(e.getMessage());
+        }
         
-        
-        guiFrame.editQResultDisplay(table);
+        guiFrame.editQResultDisplay(displayOutput);
+    }
+
+    /**
+       Generates the query for the extra display
+    */
+    private String generateQuery(String table){
+        String qry = "SELECT ";
+
+        if(table.equals("planet")) {
+            qry += ("planet.name, planet.orbits, COUNT(*) AS Moons FROM planet JOIN moon ON planet.name = moon.orbits GROUP BY planet.name");
+        } else if (table.equals("star")) {
+            qry += ("* FROM star");
+        } else if (table.equals("moon")) {
+            qry += ("* FROM moon");
+        } else if (table.equals("asteroid")) {
+            qry += ("* FROM asteroid");
+        } else if (table.equals("comet")) {
+            qry += ("* FROM comet");
+        } else if (table.equals("constellation")) {
+            qry += ("* FROM constellation");
+        } else {
+            qry += ("* FROM galaxy");
+        }
+        return qry;
     }
 
     /**
