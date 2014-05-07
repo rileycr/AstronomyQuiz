@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.sql.*;
 
 public class Query {
-
+    
     final int NUM_TYPES = 5;
     int qType;
     String question;
@@ -24,7 +24,7 @@ public class Query {
     public void createQuestion() {
         String object;
         switch(qType) {
-        
+                
             case 0:
                 // Instance name of thing that has object orbitting it (e.g. 'Sun')
                 String orbited;
@@ -39,15 +39,16 @@ public class Query {
                     oType = "planet";
                     orbited = randObject(oType);
                 }
-                System.out.println("oType: " + oType + ", Orbited by: " + orbited);
+                //System.out.println("oType: " + oType + ", Orbited by: " + orbited);
                 // E.g. comet, asteroid, planet, star
                 String oClass = randOrbiter(oType);
                 
                 question = "Name a " + oClass + " that orbits " + orbited + ".";
                 String query = "SELECT * FROM " + oClass + " WHERE orbits LIKE '" + orbited + "';";
-                System.out.println("Main Query: " + query);
+                //System.out.println("Main Query: " + query);
                 ResultSet rs = execQuery(query);
                 
+                genAnswers("*", oClass, " WHERE orbits <>'" + orbited + "'");
                 try {
                     if(rs.next()) {
                         options[3] = rs.getString("Name");
@@ -56,7 +57,10 @@ public class Query {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                genAnswers("*", oClass, " orbits <>'" + orbited + "'");
+                
+//                for(String s : options) {
+//                    System.out.print(s + ", ");
+//                }
                 
                 int r = (int)(Math.random() * 3);
                 final String temp = options[r];
@@ -64,41 +68,84 @@ public class Query {
                 options[3] = temp;
                 options[4] = answerChars[r];
                 break;
-                           
+                
             case 1:
-                object = randObject("Planet");
-                question = "What is the mass of " + object + "?";
+                System.out.println("\n\n\nCASE 1 Question!!!\n");
+                ArrayList<String> tableNames = getTableNames();
+                String table = "";
+                do {
+                    System.out.println("Invalid table: " + table);
+                    rand = (int)(Math.random() * tableNames.size());
+                    table = tableNames.get(rand);
+                } while(table.toLowerCase().equals("galaxy") ||
+                        table.toLowerCase().equals("constellation") ||
+                        table.toLowerCase().equals("made_of"));
+                
+                
+                System.out.println("Random table: " + table);
+                question = "Which " + table + " is the most massive?";
+                query = "SELECT name, mass FROM " + table + ";";
+                System.out.println("Query: " + query);
+                
+                rs = execQuery(query);
+            
+                double[] masses = new double[4];
+                double maxMass = 0;
+                int index = 0;
+                
+                try {
+                    rs.next();
+                    for(int i = 0; (i < 4); i++, rs.next()) {
+                        options[i] = rs.getString("name");
+                        masses[i] = rs.getDouble("mass");
+                        System.out.println("Name: " + options[i] + ", Mass: " + masses[i]);
+                        if(masses[i] > maxMass) {
+                            maxMass = masses[i];
+                            index = i;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                answer = options[index];
+                System.out.println("Answer set to: " + answer + "\n\n");
+                options[4] = answerChars[index];
+                
                 break;
-            case 2:
-                object = randObject("Any");
-                question = "Which " + object + " is the most massive?";
-                break;
-            case 3:
-                String star = randObject("Start");
-                question = "Which " + star + " has the most planets orbiting it?";
-                break;
-            case 4:
-                String obj1 = randObject("Star");
-                String obj2 = randObject("Star");
-                question = "True or false. " + obj1 + " is more massive than " + obj2 + "?";
-                break;
+                //            case 2:
+                //                object = randObject("Planet");
+                //                question = "What is the mass of " + object + "?";
+                //                break;
+                //
+                //            case 3:
+                //                String star = randObject("Start");
+                //                question = "Which " + star + " has the most planets orbiting it?";
+                //                break;
+                //            case 4:
+                //                String obj1 = randObject("Star");
+                //                String obj2 = randObject("Star");
+                //                question = "True or false. " + obj1 + " is more massive than " + obj2 + "?";
+                //                break;
                 
             default:
                 break;
         }
-}
+    }
     
+    
+    /**
+     Generate a random block of answers
+     */
     public void genAnswers(String c_name, String oClass, String where_clause) {
         String query = "SELECT " + c_name +
-            " FROM " + oClass +
-            " WHERE " + where_clause + ";";
-        System.out.println("Answer Query: " + query +"\n\n");
+        " FROM " + oClass + where_clause + ";"; // Moved the " WHERE " up when called.
+        //System.out.println("Answer Query: " + query +"\n\n");
         ResultSet rs = execQuery(query);
         try {
-            for(int i = 0; i < 3; i++) {
+            for(int i = 0; i < 4; i++) {
                 if(rs.next()) {
                     options[i] = rs.getString("name");
-                    System.out.println("Options: " + options[i]);
+                    //System.out.println("Options: " + options[i]);
                 }
             }
         } catch (Exception e) {
@@ -107,6 +154,9 @@ public class Query {
         return;
     }
     
+    /**
+     Get a random object from table
+     */
     public String randObject(String table) {
         
         // Find the number of rows in the upcoming result set.
@@ -144,17 +194,19 @@ public class Query {
                 e.printStackTrace();
             }
         }
-        System.out.println("Randname: " + randName);
+        //System.out.println("Randname: " + randName);
     	return randName;
     }
     
-    
+    /**
+     Get a random object that orbits a specific type of planetary body
+     */
     public String randOrbiter(String object) {
-        System.out.println("Orbiter = " + object);
+        //System.out.println("Orbiter = " + object);
         if(object.toLowerCase().equals("planet")) {
             
             return "moon";
-
+            
         } else {
             int rand = (int)(Math.random() * 3);
             switch(rand) {
@@ -169,10 +221,6 @@ public class Query {
             }
         }
     }
-    
-    
-    
-    
     
     
     /**
@@ -198,5 +246,37 @@ public class Query {
         return result;
         
     }
-
+    
+    
+    
+    /**
+     Get list of names for all tables in database
+     */
+    public ArrayList<String> getTableNames() {
+        ArrayList<String> tables = new ArrayList<String>();
+        ResultSet rs = null;
+        try {
+            try {
+                DatabaseMetaData md = AstroQuiz.connection.getMetaData();
+                String[] types = {"TABLE"};
+                rs = md.getTables(null, null, "%", types);
+                while (rs.next()) {
+                    tables.add(rs.getString("TABLE_NAME"));
+                }
+            }
+            finally {
+                if(rs != null) {
+                    rs.close();
+                }
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return tables;
+        
+    }
+    
+    
 }

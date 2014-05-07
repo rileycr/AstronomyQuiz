@@ -139,9 +139,9 @@ public class AstroQuiz {
         
         int count = 0;
         while (count < 5) {
-            Query q1 = new Query(0);
+            Query q1 = new Query(count % 2);
             while(q1.answer == null) {
-                q1 = new Query(0);
+                q1 = new Query(count & 2);
             }
             quizQs[count] = new MCQuestion(q1.question, q1.options, q1.options[4]);
             count ++;
