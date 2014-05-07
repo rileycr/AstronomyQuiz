@@ -80,32 +80,29 @@ public class AstroQuiz {
             ---- How to randomize the order of the set with the actual answer included...?
          */
 
-        String[] options1 = randSet(4);
-        options1[0]="Jupiter";
-        String[] options2 = randSet(4);
-        options2[1]="Eliptical, Cloud, Spiral";
-        String[] options3 = randSet(4);
-        options3[2] = "Earth";
-        String[] options4 = randSet(4);
-        options4[3] = "Saturn";
+        String[] options1 = randSet(4, "Planet");
+        options1 = randInsert(options1, "Jupiter");
+        
+        String[] options2 = randSet(4, "");
+        options2 = randInsert(options2, "Eliptical, Cloud, Spiral");
+        
+        String[] options3 = randSet(4, "Star");
+        options3 = randInsert(options3, "Jupiter");
+        
+        String[] options4 = randSet(4,"");
+        options4[3]= "Saturn";
         options4[2] = "Mars";
         options4[1] = "Neptune";
-        String[] options5 = randSet(4);
+        
+        String[] options5 = randSet(4, "");
         options5[0] = "Mars";
         options5[2] = "Neptune";
 
-        /*
-        String[] options1 = {"Jupiter", "Pegasus", "Epsilon Eridani", "Aquarii A"};
-        String[] options2 = {"Eliptical, Cloud, Octagonal", "Eliptical, Cloud, Spiral", "Spiral, Octagonal, Cloud", "Spiral, Eliptical, Octagonal"};
-        String[] options3 = {"Mercury", "Venus", "Earth", "Mars"};
-        String[] options4 = {"Neptune", "Earth", "Mars", "Saturn"};
-        String[] options5 = {"Mars", "Earth", "Neptune", "Saturn"};
-        */
-        
-        quizQs[0] = new MCQuestion("Which planet orbits the sun?", options1, "A");
-        quizQs[1] = new MCQuestion("What are the three types of galaxies?", options2, "B");
+
+        quizQs[0] = new MCQuestion("Which planet orbits the sun?", options1, options1[4]);
+        quizQs[1] = new MCQuestion("What are the three types of galaxies?", options2, options2[4]);
         quizQs[2] = new ResponseQuestion("What is the mass of the earth?", "5.9726e24");
-        quizQs[3] = new MCQuestion("Which planet is more massive?", options3, "C");
+        quizQs[3] = new MCQuestion("Which planet is more massive?", options3, options3[4]);
         quizQs[4] = new MCQuestion("Which planet has the most moons orbiting it?", options4, "D");
         quizQs[5] = new MCQuestion("Phobos and Deimos are moons of which planet?", options5, "A");
         quizQs[6] = new MCQuestion("Triton is the largest moon of what planet?", options5, "C");
@@ -137,16 +134,36 @@ public class AstroQuiz {
         return quizQs[qNumber].getAnswer();
     }
     
+    
+    
+    private String[] randInsert(String answers[], String correct) {
+        String letters[] = {"A", "B", "C", "D"};
+        
+        String[] update = new String[letters.length+1];
+        System.arraycopy(answers, 0, update, 0, answers.length);
+        
+        int rand = (int)(Math.random() * answers.length);
+        update[rand] = correct;
+        update[4] = letters[rand];
+        
+        return update;
+        
+    }
+    
     /**
        Randomizes objects to be in questions,
     */
-    private String randomObj() throws SQLException {
+    private String randomObj(String not) throws SQLException {
         
         ArrayList<String> tables = getTableNames();
         
     	// Get random
-        int rTable = (int)Math.random() * tables.size();
-    	String table = tables.get(rTable);
+        String table = "";
+        do {
+            int rTable = (int)(Math.random() * tables.size());
+            table = tables.get(rTable);
+            System.out.println("Table: " + table);
+        } while (table.equals(not));
     	
 
         // Find the number of rows in the upcoming result set.
@@ -183,13 +200,13 @@ public class AstroQuiz {
     	return randName;
     }
     
-    private String[] randSet(int num) {
+    private String[] randSet(int num, String not) { /***** changed 'not'*****/
         String answerSet[] = new String[num];
         for(int i = 0; (i < num); i++) {
             String s = "";
             while(s == "") {
                 try{
-                    s = randomObj();
+                    s = randomObj(not); /***** changed 'not' *****/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
