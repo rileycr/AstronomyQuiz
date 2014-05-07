@@ -211,6 +211,8 @@ public class AstroQuiz {
         
         String testQ = ("SELECT * FROM "+table);
         ResultSet test = execQuery(testQ);
+
+        
         
         guiFrame.editQResultDisplay(table);
     }
