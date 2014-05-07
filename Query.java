@@ -39,9 +39,11 @@ public class Query {
                     oType = "planet";
                     orbited = randObject(oType);
                 }
-                //System.out.println("oType: " + oType + ", Orbited by: " + orbited);
+                
                 // E.g. comet, asteroid, planet, star
-                String oClass = randOrbiter(oType);
+                String oClass = randOrbiter(oType, orbited);
+                
+                System.out.println("Object type: " + oType + ", Orbited by type: " + oClass + ", name: " + orbited);
                 
                 question = "Name a " + oClass + " that orbits " + orbited + ".";
                 String query = "SELECT * FROM " + oClass + " WHERE orbits LIKE '" + orbited + "';";
@@ -52,8 +54,8 @@ public class Query {
                 try {
                     if(rs.next()) {
                         options[3] = rs.getString("Name");
-                        answer = options[3];
                     }
+                    answer = options[3];
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -201,23 +203,31 @@ public class Query {
     /**
      Get a random object that orbits a specific type of planetary body
      */
-    public String randOrbiter(String object) {
+    public String randOrbiter(String object, String name) {
         //System.out.println("Orbiter = " + object);
         if(object.toLowerCase().equals("planet")) {
             
             return "moon";
             
         } else {
-            int rand = (int)(Math.random() * 3);
+            int rand = 0;
+            if(!name.toLowerCase().equals("sun")) {
+                    rand = (int)(Math.random() * 3);
+            } else {
+                rand = (int)(Math.random() * 2);
+            }
+            if(rand != 1) {
+                System.out.println("RAND TYPE = " + rand + "!!!!!");
+            }
             switch(rand) {
                 case 0:
-                    return "planet";
+                    return "asteroid";
                 case 1:
                     return "comet";
                 case 2:
-                    return "asteroid";
-                default:
                     return "planet";
+                default:
+                    return "";
             }
         }
     }

@@ -138,9 +138,16 @@ public class AstroQuiz {
     private void createQuestions() {
         
         int count = 0;
-        while (count < 5) {
+        while (count < 10) {
             Query q1 = new Query(count % 2);
-            while(q1.answer == null) {
+            
+            // Small database frequently has insufficient information to populate answers
+            while(q1.options[0] == null ||
+                  q1.options[1] == null ||
+                  q1.options[2] == null ||
+                  q1.options[3] == null) {
+                
+                System.out.println("Creating new question....");
                 q1 = new Query(count & 2);
             }
             quizQs[count] = new MCQuestion(q1.question, q1.options, q1.options[4]);
