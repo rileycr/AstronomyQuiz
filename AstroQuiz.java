@@ -17,7 +17,7 @@ public class AstroQuiz {
     private String playerName;
     private QuizFrame guiFrame;
 
-    public Connection connection;
+    public static Connection connection;
     private int qCount = 0;  // running count of the question
 
     private static Question[] quizQs = new Question[11];
