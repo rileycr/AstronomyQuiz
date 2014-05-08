@@ -147,7 +147,7 @@ public class AstroQuiz {
     */
     private void createQuestions() {
         
-        /*int count = 0;
+        int count = 0;
         while (count < 10) {
             Query q1 = new Query(count % 2);
             
@@ -162,8 +162,9 @@ public class AstroQuiz {
             }
             quizQs[count] = new MCQuestion(q1.question, q1.options, q1.options[4]);
             count ++;
-        }*/
-        quizQs = generator.makeQuestionBatch(11);
+        }
+        
+        //quizQs = generator.makeQuestionBatch(11); Uses the question generator to make questions
         
         quizQs[10] = null;
 

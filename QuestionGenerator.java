@@ -6,8 +6,30 @@ import java.util.*;
 import java.lang.*;
 
 public class QuestionGenerator{
+  
+   /******************  Member Variables *************************/
+  
   public static Connection connection;
   public static Random random = new Random();
+  
+   /*************************************************************/
+  
+  /** Constructor creates database connection */
+  public QuestionGenerator(){
+    dbConnect();
+  }
+  
+  /** Creates a batch of question objects */
+  public Question[] makeQuestionBatch(int amount){
+    Question[] questions = new Question[amount];
+    for(int i = 0; i < amount; i++){
+      System.out.println(i);
+      questions[i] = makeQuestion();
+    }
+    return questions;
+  }
+    
+  
   /**
    Connects to our database and allows for questions to be
    generated, queries made and results to be shown
@@ -31,12 +53,23 @@ public class QuestionGenerator{
     
     String[] defaultInfo = {"Earth","Moon","Pegasus","Pluto"};
     Question question;
+    int QUESTIONS = 3; // The amount of possible question types
     try{
-      switch(random.nextInt(2) + 1) {
-        case 1: question = makeSunOrbitQuestion();
+      switch(random.nextInt(QUESTIONS) + 1) {
+        case 1: question = makeOrbitQuestion("Planet", "Star");
         break;
-        //case 2: question = makePlanetOrbitQuestion();
-        //break;
+        case 2: question = makeOrbitQuestion("Moon", "Planet");
+        break;
+        /* Non Working questions
+        case 3: question = makeMassQuestion("Planet");
+        System.out.println("making Aggregate");
+        break;
+        Removed due to insufficient data causing the program to lock up
+        case : question = makeOrbitQuestion("Comet", "Star");
+        break;
+        case : question = makeOrbitQuestion("Asteroid", "Star");
+        break;
+        case : question = makeAggregateQuestion("Planet"); */
         default: question = new MCQuestion("Which planet orbits the sun?", defaultInfo, "Earth");
       }
       return question;
@@ -49,67 +82,100 @@ public class QuestionGenerator{
     
   }
   
-  /** Generates question by querying database 
-    * This question is about planets orbiting a sun*/
-  private Question makeSunOrbitQuestion() throws SQLException{
-    ResultSet planets = execQuery("SELECT Name, Orbits FROM Planet");
-    ArrayList<String[]> planetNames = new ArrayList<String[]>();
-    do{
-      String[] planetInfo = new String[2];
-      planetInfo[0] = planets.getString("Name");
-      planetInfo[1] = planets.getString("Orbits");
-      planetNames.add(planetInfo);
-    } while (planets.next());
-    String[] correctPlanetInfo = planetNames.get(random.nextInt(planetNames.size()));
-    String correctPlanet = correctPlanetInfo[0];
-    String[] questionInfo = new String[4];
-    questionInfo[0] = correctPlanet;
-    //System.out.println("Correct Planet: " + correctPlanet);
-    String correctPlanetOrbit = correctPlanetInfo[1];
-    //System.out.println("Correct Planet Orbits: " + correctPlanetOrbit);
-    int count = 1;
-    while(count < 4){
-      String wrongPlanet = planetNames.get(random.nextInt(planetNames.size()))[0];
-      String wrongPlanetOrbit = planetNames.get(random.nextInt(planetNames.size()))[1];
-      //System.out.println("Count: " + count + " \nWrong Planet: " + wrongPlanet);
-      if(!(wrongPlanet.equals(correctPlanet)) && !((wrongPlanet.equals(questionInfo[1])) || wrongPlanet.equals(questionInfo[2]) || wrongPlanet.equals(questionInfo[3])) && !(wrongPlanetOrbit.equals(correctPlanetOrbit))){
-        questionInfo[count] = wrongPlanet;
-        count++;
-      }
-    }
-    Collections.shuffle(Arrays.asList(questionInfo));
-    return new MCQuestion("Which planet orbits the star " + correctPlanetOrbit, questionInfo, determineLetter(questionInfo, correctPlanet));
-  }
-  
-  private Question makeOrbitQuestion(String table, String orbitType){
+  private Question makeOrbitQuestion(String table, String orbitType) throws SQLException{
     ResultSet bodies = execQuery("SELECT Name, Orbits FROM " + table);
-    ArrayList<String[]> planetNames = new ArrayList<String[]>();
+    ArrayList<String[]> bodyNames = new ArrayList<String[]>();
+    // Pulls out "Name" and "Orbits" columns for a each row and enters them into
+    // A 2 element string array [0] = name, [1] = orbits
     do{
       String[] bodyInfo = new String[2];
       bodyInfo[0] = bodies.getString("Name");
       bodyInfo[1] = bodies.getString("Orbits");
       bodyNames.add(bodyInfo);
     } while (bodies.next());
-    String[] correctBodyInfo = bodyNames.get(random.nextInt(bodyNames.size()));
-    String correctBody = correctBodyInfo[0];
-    String correctBodyOrbit = correctBodyInfo[1];
-    
+    String[] correctBodyInfo = bodyNames.get(random.nextInt(bodyNames.size())); // Selects the body to use as the correct answer
+
     String[] questionInfo = new String[4];
-    questionInfo[0] = correctBody;
+    questionInfo[0] = correctBodyInfo[0];
 
     int count = 1;
     while(count < 4){
-      String wrongBody = bodyNames.get(random.nextInt(bodyNames.size()))[0];
-      String wrongodyOrbit = bodyNames.get(random.nextInt(bodyNames.size()))[1];
+      String[] wrongBodyInfo = bodyNames.get(random.nextInt(bodyNames.size()));
+      String wrongBody = wrongBodyInfo[0];
+      String wrongBodyOrbit = wrongBodyInfo[1];
       //System.out.println("Count: " + count + " \nWrong Planet: " + wrongPlanet);
-      if(!(wrongBody.equals(correctBody)) && !((wrongBody.equals(questionInfo[1])) || wrongBody.equals(questionInfo[2]) || wrongBody.equals(questionInfo[3])) && !(wrongBodyOrbit.equals(correctBodyOrbit))){
-        questionInfo[count] = wrongPlanet;
+      if(!(wrongBody.equals(correctBodyInfo[0])) && !((wrongBody.equals(questionInfo[1])) || wrongBody.equals(questionInfo[2]) || wrongBody.equals(questionInfo[3])) && !(wrongBodyOrbit.equals(correctBodyInfo[1]))){
+        questionInfo[count] = wrongBody;
         count++;
       }
     }
     Collections.shuffle(Arrays.asList(questionInfo));
-    return new MCQuestion("Which planet orbits the star " + correctPlanetOrbit, questionInfo, determineLetter(questionInfo, correctPlanet));
+    return new MCQuestion("Which " + table + " orbits the " + orbitType + " " + correctBodyInfo[1], questionInfo, determineLetter(questionInfo, correctBodyInfo[0]));
   }
+  
+  private Question makeMassQuestion(String table) throws SQLException{
+    ResultSet bodies = execQuery("SELECT Name, Mass " + table);
+    ArrayList<String[]> bodyNames = new ArrayList<String[]>();
+    // Pulls out "Name" and "Mass" columns for a each row and enters them into
+    // A 2 element string array [0] = name, [1] = mass
+    do{
+      String[] bodyInfo = new String[2];
+      bodyInfo[0] = bodies.getString("Name");
+      bodyInfo[1] = bodies.getString("Mass");
+      bodyNames.add(bodyInfo);
+    } while (bodies.next());
+    String[] correctBodyInfo = bodyNames.get(random.nextInt(bodyNames.size())); // Selects the body to use as the correct answer
+
+    String[] questionInfo = new String[4];
+    questionInfo[0] = correctBodyInfo[0];
+
+    int count = 1;
+    while(count < 4){
+      String[] wrongBodyInfo = bodyNames.get(random.nextInt(bodyNames.size()));
+      String wrongBody = wrongBodyInfo[0];
+      String wrongBodyMass = wrongBodyInfo[1];
+      //System.out.println("Count: " + count + " \nWrong Planet: " + wrongPlanet);
+      if(!(wrongBody.equals(correctBodyInfo[0])) && !((wrongBody.equals(questionInfo[1])) || wrongBody.equals(questionInfo[2]) || wrongBody.equals(questionInfo[3]))){
+        questionInfo[count] = wrongBody;
+        count++;
+      }
+    }
+    Collections.shuffle(Arrays.asList(questionInfo));
+    return new MCQuestion("Which " + table + "has a mass of" + correctBodyInfo[1], questionInfo, determineLetter(questionInfo, correctBodyInfo[0]));
+  }
+  
+  /** Asks which planet has the most bodies orbiting it */
+  
+  /*private Question makeAggregateQuestion(String table, String orbiting) throws SQLException{
+    
+    ResultSet bodies = execQuery("SELECT Name FROM " + table);
+    ArrayList<String> names = new ArrayList<String>();
+    do {
+      String name = bodies.getString("Name");
+      names.add(name);
+    } while (bodies.next());
+    
+    /*ResultSet most  = execQuery("SELECT" + table + ".Name FROM " + table + " JOIN " + orbiting + "ON " + orbiting + 
+                                ".Orbits = " + table + ".Name GROUP BY " + table + ".Name HAVING COUNT(*) = (SELECT MAX(C)" +
+                                "FROM(SELECT COUNT(*) AS C FROM " + orbiting + " GROUP BY " + orbiting + ".Orbits))");
+    
+    String correctBody = most.getString("Name");
+    
+    int count = 1;
+    String[] questionInfo = new String[4];
+    while(count < 4){
+      String wrongBody = names.get(random.nextInt(names.size()));
+      //System.out.println("Count: " + count + " \nWrong Planet: " + wrongPlanet);
+      if(!(wrongBody.equals(correctBody)) && !((wrongBody.equals(questionInfo[1])) || wrongBody.equals(questionInfo[2]) || wrongBody.equals(questionInfo[3]))){
+        questionInfo[count] = wrongBody;
+        count++;
+      }
+    }
+    Collections.shuffle(Arrays.asList(questionInfo));
+    return new MCQuestion("Which " + table + " has the most " + orbiting + "s orbiting around it?", questionInfo, determineLetter(questionInfo, correctBody));
+  }*/
+  
+  
   
   /** Convenience method to find correct option letter */
   private String determineLetter(String[] questionInfo, String correctAnswer){
@@ -125,7 +191,7 @@ public class QuestionGenerator{
   
   /* Convenience method for communication with the database */
   public ResultSet execQuery(String query) {
-
+    
         ResultSet result = null;
         try {
             Statement stmt = connection.createStatement();
