@@ -183,21 +183,35 @@ public class AstroQuiz {
        Called by the GUI to get basic info from the database
     */
     public void displayBasic(String table){
-
-        String displayQuery = generateQuery(table);
         String displayOutput = "";
 
         try{
-            ResultSet test = execQuery(displayQuery);
-            
             if(table.equals("planet")) {
-                displayOutput += String.format("%-12s %-12s %-12s", "Planet", "Star", "#-Moons\n");
-                while(test.next()){
-                    displayOutput += String.format("%-12s %-12s %-12s", test.getString("name"), test.getString("orbits"), test.getInt("Moons"));
-                    displayOutput += "\n";
+                ResultSet rs1 = execQuery("SELECT Planet.name, Planet.orbits, COUNT(*) AS Moons FROM Planet LEFT OUTER JOIN Moon ON Planet.name = Moon.orbits GROUP BY Planet.name EXCEPT SELECT Planet.name, Planet.orbits, COUNT(*) AS Moons FROM Planet LEFT OUTER JOIN Moon ON Planet.name = Moon.orbits WHERE Moon.orbits IS NULL GROUP BY Planet.name");
+                ResultSet rs2 = execQuery("SELECT Planet.name AS Planet, Planet.orbits AS Orbits FROM Planet LEFT OUTER JOIN Moon ON Planet.name = Moon.orbits WHERE Moon.orbits IS NULL");
+                
+                displayOutput += String.format("%-17s %-17s %s\n", "Planet", "Star", "#-Moons");
+                while(rs1.next()){
+                    displayOutput += String.format("%-17s %-17s %s\n", rs1.getString("Planet.name"), rs1.getString("Planet.orbits"), rs1.getInt("Moons"));
+                }
+
+                while(rs2.next()){
+                    displayOutput += String.format("%-17s %-17s %s\n", rs2.getString("Planet"), rs2.getString("Orbits"), "0");
                 }
             } else if (table.equals("star")) {
+
+                ResultSet rs1 = execQuery("SELECT Star.name, Star.mass, COUNT(*) AS Planets FROM Star LEFT OUTER JOIN Planet ON Star.name = Planet.orbits GROUP BY Star.name EXCEPT SELECT Star.name, Star.mass, COUNT(*) AS Planets FROM Star LEFT OUTER JOIN Planet ON Star.name = Planet.orbits WHERE Planet.orbits IS NULL GROUP BY Star.name");
+                ResultSet rs2 = execQuery("SELECT Star.name, Star.mass, COUNT(*) AS Planets FROM Star LEFT OUTER JOIN Planet ON Star.name = Planet.orbits WHERE Planet.orbits IS NULL GROUP BY Star.name");
                 
+                displayOutput += String.format("%-17s %-17s %s\n", "Star", "Mass", "#-Planets");
+
+                while(rs1.next()){
+                    displayOutput += String.format("%-17s %-17s %s\n", rs1.getString("Star.name"), rs1.getInt("Star.mass"), rs1.getInt("Planets"));
+                }
+                
+                while(rs2.next()){
+                    displayOutput += String.format("%-17s %-17s %s\n", rs2.getString("name"), rs2.getInt("mass"), "0");
+                }
             } else if (table.equals("moon")) {
                 
             } else if (table.equals("asteroid")) {
@@ -224,11 +238,13 @@ public class AstroQuiz {
         String qry = "SELECT ";
 
         if(table.equals("planet")) {
-            qry += ("planet.name, planet.orbits, COUNT(*) AS Moons FROM planet JOIN moon ON planet.name = moon.orbits GROUP BY planet.name");
+            qry += ("Planet.name, Planet.orbits, COUNT(*) AS Moons FROM Planet JOIN Moon ON Planet.name = Moon.orbits GROUP BY Planet.name");
+            
         } else if (table.equals("star")) {
-            qry += ("* FROM star");
+            qry += ("Star.name, Star.mass, COUNT(*) AS Planets FROM Star JOIN Planet ON Star.name = Planet.orbits GROUP BY Star.name");
+            
         } else if (table.equals("moon")) {
-            qry += ("* FROM moon");
+            qry += (" FROM moon");
         } else if (table.equals("asteroid")) {
             qry += ("* FROM asteroid");
         } else if (table.equals("comet")) {

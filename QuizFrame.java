@@ -22,12 +22,15 @@ public class QuizFrame extends JFrame {
     private JPanel extraPanel;
     private JPanel qResultPanel;
     private JPanel queryPanel;
+    private JPanel learnButtonPanel;
+    private JTextField responseField;
     private JTextPane questionPane;
     private JTextPane qResultDisplay;
-    private JTextField responseField;
-    private JTextArea infoQuestionProgress;
-    private JTextArea infoAccuracy;
-    
+    private JTextPane infoQuestionProgress;
+    private JTextPane infoAccuracy;
+
+    private JScrollPane resultScroll;
+
     private JButton submitButton;
     private JButton quitButton;
     private JButton choiceA;
@@ -204,14 +207,15 @@ public class QuizFrame extends JFrame {
        Remaining code draws the GUI
      */
     public void setupGUI(){
+        setSize(new Dimension(600, 430));
+        
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         screenWidth = screenSize.width;
         screenHeight = screenSize.height;
-        setSize(new Dimension(500, 430));
         setLocation(screenWidth / 2 - getWidth() / 2, screenHeight / 2 - getHeight() / 2);
         setResizable(false);
+        
         setIconImage(Toolkit.getDefaultToolkit().getImage("GUI icon.png"));
-		
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
         //The bottom buttons
@@ -234,13 +238,13 @@ public class QuizFrame extends JFrame {
         getContentPane().add(northPanel, BorderLayout.NORTH);
         
         //Input box
-        infoQuestionProgress = new JTextArea();
-        infoQuestionProgress.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        infoQuestionProgress = new JTextPane();
         infoQuestionProgress.setEditable(false);
+        infoQuestionProgress.setFont(new Font("Source Code Pro", Font.PLAIN, 10));
         northPanel.add(infoQuestionProgress);
         
-        infoAccuracy = new JTextArea();
-        infoAccuracy.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        infoAccuracy = new JTextPane();
+        infoAccuracy.setFont(new Font("Source Code Pro", Font.PLAIN, 10));
         infoAccuracy.setEditable(false);
 
         northPanel.add(infoAccuracy);
@@ -260,19 +264,19 @@ public class QuizFrame extends JFrame {
         centerPanel.setLayout(centerLayout);
         
         questionPane = new JTextPane();
+        questionPane.setFont(new Font("Source Code Pro", Font.PLAIN, 10));
         centerLayout.putConstraint(SpringLayout.NORTH, questionPane, 0, SpringLayout.NORTH, centerPanel);
         centerLayout.putConstraint(SpringLayout.WEST, questionPane, 0, SpringLayout.WEST, centerPanel);
         centerLayout.putConstraint(SpringLayout.SOUTH, questionPane, 264, SpringLayout.NORTH, centerPanel);
         centerLayout.putConstraint(SpringLayout.EAST, questionPane, 250, SpringLayout.WEST, centerPanel);
         questionPane.setEditable(false);
-        questionPane.setFont(new Font("Tahoma", Font.PLAIN, 16));
         questionPane.setText("Test question?\nA. Apples\nB. Bananas");
         centerPanel.add(questionPane);
 
         //A panel to add extra items in the future
         extraPanel = new JPanel();
         centerLayout.putConstraint(SpringLayout.NORTH, extraPanel, 0, SpringLayout.NORTH, centerPanel);
-        centerLayout.putConstraint(SpringLayout.WEST, extraPanel, -223, SpringLayout.EAST, centerPanel);
+        centerLayout.putConstraint(SpringLayout.WEST, extraPanel, 6, SpringLayout.EAST, questionPane);
         centerLayout.putConstraint(SpringLayout.EAST, extraPanel, 0, SpringLayout.EAST, centerPanel);
         centerPanel.add(extraPanel);
         extraPanel.setLayout(new BorderLayout(0, 0));
@@ -281,14 +285,21 @@ public class QuizFrame extends JFrame {
         dbQueryLabel.setText("Database Query Tool");
         extraPanel.add(dbQueryLabel, BorderLayout.NORTH);
         
-        queryPanel = new JPanel(new FlowLayout());
+        queryPanel = new JPanel(new BorderLayout(0,0));
         qResultPanel = new JPanel(new BorderLayout(0,0));
         resultGoBack = new JButton("Go Back");
         resultGoBack.addActionListener(bListen);
-        qResultDisplay = new JTextPane();
-        qResultPanel.add(resultGoBack, BorderLayout.NORTH);
-        qResultPanel.add(qResultDisplay, BorderLayout.CENTER);
 
+        qResultDisplay = new JTextPane();
+        qResultDisplay.setFont(new Font("Source Code Pro", Font.PLAIN, 10));
+        resultScroll = new JScrollPane(qResultDisplay);
+        
+        qResultPanel.add(resultGoBack, BorderLayout.NORTH);
+        qResultPanel.add(resultScroll, BorderLayout.CENTER);
+
+        learnButtonPanel = new JPanel(new FlowLayout());
+        queryPanel.add(learnButtonPanel, BorderLayout.CENTER);
+        
         extraPanel.add(queryPanel, BorderLayout.CENTER);
         
         JTextPane queryTextPane = new JTextPane();
@@ -316,14 +327,14 @@ public class QuizFrame extends JFrame {
         galaxyButton = new JButton("Galaxies");
         galaxyButton.addActionListener(bListen);
 
-        queryPanel.add(queryTextPane);
-        queryPanel.add(planetButton);
-        queryPanel.add(starButton);
-        queryPanel.add(moonButton);
-        queryPanel.add(asteroidButton);
-        queryPanel.add(cometButton);
-        queryPanel.add(constellationButton);
-        queryPanel.add(galaxyButton);
+        queryPanel.add(queryTextPane, BorderLayout.NORTH);
+        learnButtonPanel.add(planetButton);
+        learnButtonPanel.add(starButton);
+        learnButtonPanel.add(moonButton);
+        learnButtonPanel.add(asteroidButton);
+        learnButtonPanel.add(cometButton);
+        learnButtonPanel.add(constellationButton);
+        learnButtonPanel.add(galaxyButton);
 
         //The panel to contain the multiple choice buttons
         buttonPanel = new JPanel();
