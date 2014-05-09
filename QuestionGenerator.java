@@ -54,7 +54,7 @@ public class QuestionGenerator{
     
     String[] defaultInfo = {"Earth","Moon","Pegasus","Pluto"};
     Question question;
-    int QUESTIONS = 4; // The amount of possible question types
+    int QUESTIONS = 6; // The amount of possible question types
     try{
       switch(random.nextInt(QUESTIONS) + 1) {
         case 1: question = makeOrbitQuestion("Planet", "Star");
@@ -64,6 +64,10 @@ public class QuestionGenerator{
         case 3: question = makeAggregateQuestion("Planet", "Moon"); 
         break;
         case 4: question = makeAggregateQuestion("Star", "Comet");
+        break;
+        case 5: question = makeAggregateQuestion("Star", "Planet");
+        break;
+        case 6: question = makeAggregateQuestion("Star", "Asteroid");
         break;
         default: question = new MCQuestion("Which planet orbits the sun?", defaultInfo, "Earth");
         /* Non Working questions
@@ -177,7 +181,6 @@ public class QuestionGenerator{
       if(!(body.equals(data[0]) || body.equals(data[1]) || body.equals(data[2]) || body.equals(data[3]))){
         ResultSet orbiting = execQuery("SELECT count(*) from " + orbitingBody + " WHERE Orbits = \"" + body + "\"");
         int orbits = orbiting.getInt(1);
-        System.out.println("Orbits = " + orbits);
         if(orbits != most){
           data[count] = body;
           if(orbits > most){
@@ -190,9 +193,7 @@ public class QuestionGenerator{
     } 
     
     return new MCQuestion("Which " + table + " has the most " + orbitingBody + "s orbiting it?", data, determineLetter(data, mostBody));
-  }
-  
-  
+  } 
   
   /** Convenience method to find correct option letter */
   private String determineLetter(String[] questionInfo, String correctAnswer){

@@ -79,37 +79,39 @@ public class AstroQuiz {
        Currently in testing phase, creates questions to send to the GUI
     */
     private void createQuestions() {
+      
+      int count = 0;
+      while (count < 5) {
+        Query q1 = new Query(count % 2);
         
-        /*int count = 0;
-        while (count < 10) {
-            Query q1 = new Query(count % 2);
-            
-            // Small database frequently has insufficient information to populate answers
-            while(!q1.valid ||
-                  q1.options[0] == null ||
-                  q1.options[1] == null ||
-                  q1.options[2] == null ||
-                  q1.options[3] == null) {
-                
-                q1 = new Query(count % 2);
-            }
-            quizQs[count] = new MCQuestion(q1.question, q1.options, q1.options[4]);
-            count ++;
-        }*/
+        // Small database frequently has insufficient information to populate answers
+        while(!q1.valid ||
+              q1.options[0] == null ||
+              q1.options[1] == null ||
+              q1.options[2] == null ||
+              q1.options[3] == null) {
+          
+          q1 = new Query(count % 2);
+        }
+        quizQs[count] = new MCQuestion(q1.question, q1.options, q1.options[4]);
+        count ++;
+      }
       
       try{
-      connection.close();
+        connection.close();
       } catch (SQLException e) {
         System.err.println("Unable to close connection");
       } catch (Exception e){
         e.getMessage();
       }
       QuestionGenerator generator = new QuestionGenerator();
-        
-        quizQs = generator.makeQuestionBatch(11); //Uses the question generator to make questions
-        
-        quizQs[10] = null;
-
+      Question[] generatored = generator.makeQuestionBatch(11); //Uses the question generator to make questions
+      for(int i = 5; i < 10; i++){
+        quizQs[i] = generatored[i-5];
+      }
+            
+      quizQs[10] = null;
+      
     }
 
     /**
