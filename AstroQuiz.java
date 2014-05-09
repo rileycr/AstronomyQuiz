@@ -23,7 +23,7 @@ public class AstroQuiz {
     private static Question[] quizQs = new Question[11];
     
     private static Random random = new Random();
-    private static QuestionGenerator generator = new QuestionGenerator();
+    private static QuestionGenerator generator;
     
     /***************************************************************************/
     
@@ -38,6 +38,7 @@ public class AstroQuiz {
         try{
             getPlayerName();
             dbConnect();
+            
             
             createQuestions();
             guiStart();
@@ -73,81 +74,13 @@ public class AstroQuiz {
             e.printStackTrace();
         }
     }
-   /** Randomly selects a question type to generate */
-    
-    private Question makeQuestion(){
-
-      String[] defaultInfo = {"Earth","Moon","Pegasus","Pluto"};
-      Question question;
-      try{
-      switch(random.nextInt(2) + 1) {
-        case 1: question = makeSunOrbitQuestion();
-        break;
-        //case 2: question = makePlanetOrbitQuestion();
-        //break;
-        default: question = new MCQuestion("Which planet orbits the sun?", defaultInfo, "Earth");
-      }
-      return question;
-      } catch (Exception e){
-        System.out.println(e.getMessage());
-        System.out.println("Error creating question");
-        question =  new MCQuestion("Which planet orbits the sun?", defaultInfo, "Earth");
-      }
-      return question;
-
-    }
-    
-    /** Generates question by querying database 
-      * This question is about planets orbiting a sun*/
-    private Question makeSunOrbitQuestion() throws SQLException{
-      ResultSet planets = execQuery("SELECT Name, Orbits FROM Planet");
-      ArrayList<String[]> planetNames = new ArrayList<String[]>();
-      do{
-        String[] planetInfo = new String[2];
-        planetInfo[0] = planets.getString("Name");
-        planetInfo[1] = planets.getString("Orbits");
-        planetNames.add(planetInfo);
-      } while (planets.next());
-      String[] correctPlanetInfo = planetNames.get(random.nextInt(planetNames.size()));
-      String correctPlanet = correctPlanetInfo[0];
-      String[] questionInfo = new String[4];
-      questionInfo[0] = correctPlanet;
-      //System.out.println("Correct Planet: " + correctPlanet);
-      String correctPlanetOrbit = correctPlanetInfo[1];
-      //System.out.println("Correct Planet Orbits: " + correctPlanetOrbit);
-      int count = 1;
-      while(count < 4){
-        String wrongPlanet = planetNames.get(random.nextInt(planetNames.size()))[0];
-        String wrongPlanetOrbit = planetNames.get(random.nextInt(planetNames.size()))[1];
-        //System.out.println("Count: " + count + " \nWrong Planet: " + wrongPlanet);
-        if(!(wrongPlanet.equals(correctPlanet)) && !((wrongPlanet.equals(questionInfo[1])) || wrongPlanet.equals(questionInfo[2]) || wrongPlanet.equals(questionInfo[3])) && !(wrongPlanetOrbit.equals(correctPlanetOrbit))){
-          questionInfo[count] = wrongPlanet;
-          count++;
-        }
-      }
-      Collections.shuffle(Arrays.asList(questionInfo));
-      return new MCQuestion("Which planet orbits the star " + correctPlanetOrbit, questionInfo, determineLetter(questionInfo, correctPlanet));
-    }
-    
-    /** Convenience method to find correct option letter */
-     private String determineLetter(String[] questionInfo, String correctAnswer){
-      if(questionInfo[0].equals(correctAnswer)){
-        return "A";
-      } else if (questionInfo[1].equals(correctAnswer)){
-        return "B";
-      } else if (questionInfo[2].equals(correctAnswer)){
-        return "C";
-      }
-      return  "D";
-    }
       
-
     /**
        Currently in testing phase, creates questions to send to the GUI
     */
     private void createQuestions() {
         
-        int count = 0;
+        /*int count = 0;
         while (count < 10) {
             Query q1 = new Query(count % 2);
             
@@ -162,9 +95,18 @@ public class AstroQuiz {
             }
             quizQs[count] = new MCQuestion(q1.question, q1.options, q1.options[4]);
             count ++;
-        }
+        }*/
+      
+      try{
+      connection.close();
+      } catch (SQLException e) {
+        System.err.println("Unable to close connection");
+      } catch (Exception e){
+        e.getMessage();
+      }
+      QuestionGenerator generator = new QuestionGenerator();
         
-        //quizQs = generator.makeQuestionBatch(11); Uses the question generator to make questions
+        quizQs = generator.makeQuestionBatch(11); //Uses the question generator to make questions
         
         quizQs[10] = null;
 
