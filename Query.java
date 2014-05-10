@@ -12,7 +12,6 @@ public class Query {
     
     static String[] answerChars = {"A","B","C","D"};
     
-    
     public Query(int type) {
         qType = type % NUM_TYPES;
         args = args;
@@ -26,130 +25,105 @@ public class Query {
         String object;
         switch(qType) {
                 
-            case 0:
-                // Instance name of thing that has object orbitting it (e.g. 'Sun')
-                String orbited;
-                // Class of object above
-                String oType;
+        case 0:
+            // Instance name of thing that has object orbitting it (e.g. 'Sun')
+            String orbited;
+            // Class of object above
+            String oType;
                 
-                rand = (int)(Math.random() * 2);
-                if(rand == 0) {
-                    oType = "star";
-                    orbited = randObject(oType);
-                } else {
-                    oType = "planet";
-                    orbited = randObject(oType);
-                }
+            rand = (int)(Math.random() * 2);
+            if(rand == 0) {
+                oType = "star";
+                orbited = randObject(oType);
+            } else {
+                oType = "planet";
+                orbited = randObject(oType);
+            }
                 
-                // E.g. comet, asteroid, planet, star
-                String oClass = randOrbiter(oType, orbited);
+            // E.g. comet, asteroid, planet, star
+            String oClass = randOrbiter(oType, orbited);
                 
-                System.out.println("Object type: " + oType + ", Orbited by type: " + oClass + ", name: " + orbited);
+            question = "Name a " + oClass + " that orbits " + orbited + ".";
+            String query = "SELECT * FROM " + oClass + " WHERE orbits LIKE '" + orbited + "';";
+
+            ResultSet rs = execQuery(query);
                 
-                question = "Name a " + oClass + " that orbits " + orbited + ".";
-                String query = "SELECT * FROM " + oClass + " WHERE orbits LIKE '" + orbited + "';";
-                //System.out.println("Main Query: " + query);
-                ResultSet rs = execQuery(query);
-                
-                genAnswers("*", oClass, " WHERE orbits NOT LIKE '" + orbited + "'");
-                try {
-                    if(rs.next()) {
-                        options[3] = rs.getString("Name");
-                        valid = true;
-                        System.out.println("Valid..");
-                    } else {
-                        valid = false;
-                        System.out.println("Empty Set..");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                
-//                for(String s : options) {
-//                    System.out.print(s + ", ");
-//                }
-                
-                rand = (int)(Math.random() * 3);
-                final String temp = options[rand];
-                options[rand] = options[3];
-                options[3] = temp;
-                options[4] = answerChars[rand];
-                break;
-                
-            case 1:
-                System.out.println("\n\nCASE 1 Question!!!");
-                ArrayList<String> tableNames = getTableNames();
-                String table = "";
-                do {
-                    System.out.println("Invalid table: " + table);
-                    rand = (int)(Math.random() * tableNames.size());
-                    table = tableNames.get(rand);
-                } while(table.toLowerCase().equals("galaxy") ||
-                        table.toLowerCase().equals("constellation") ||
-                        table.toLowerCase().equals("made_of"));
-                
-                
-                System.out.println("Random table: " + table);
-                question = "Which " + table + " is the most massive?";
-                query = "SELECT name, mass FROM " + table + ";";
-                System.out.println("Query: " + query);
-                
-                rs = execQuery(query);
-            
-                double[] masses = new double[4];
-                double maxMass = 0;
-                int index = 0;
-                
-                try {
-                    rs.next();
-                    for(int i = 0; (i < 4); i++, rs.next()) {
-                        options[i] = rs.getString("name");
-                        masses[i] = rs.getDouble("mass");
-                        System.out.println("Name: " + options[i] + ", Mass: " + masses[i]);
-                        if(masses[i] > maxMass) {
-                            maxMass = masses[i];
-                            index = i;
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                
-                if(options[index] != null) {
+            genAnswers("*", oClass, " WHERE orbits NOT LIKE '" + orbited + "'");
+            try {
+                if(rs.next()) {
+                    options[3] = rs.getString("Name");
                     valid = true;
+                
+                } else {
+                    valid = false;
+                
                 }
-                System.out.println("Answer set to: " + options[index] + "\n\n");
-                options[4] = answerChars[index];
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
                 
-                break;
-                //            case 2:
-                //                object = randObject("Planet");
-                //                question = "What is the mass of " + object + "?";
-                //                break;
-                //
-                //            case 3:
-                //                String star = randObject("Start");
-                //                question = "Which " + star + " has the most planets orbiting it?";
-                //                break;
-                //            case 4:
-                //                String obj1 = randObject("Star");
-                //                String obj2 = randObject("Star");
-                //                question = "True or false. " + obj1 + " is more massive than " + obj2 + "?";
-                //                break;
+            rand = (int)(Math.random() * 3);
+            final String temp = options[rand];
+            options[rand] = options[3];
+            options[3] = temp;
+            options[4] = answerChars[rand];
+            break;
                 
-            default:
-                break;
+        case 1:
+            ArrayList<String> tableNames = getTableNames();
+            String table = "";
+            do {
+                    
+                rand = (int)(Math.random() * tableNames.size());
+                table = tableNames.get(rand);
+            } while(table.toLowerCase().equals("galaxy") ||
+                    table.toLowerCase().equals("constellation") ||
+                    table.toLowerCase().equals("made_of"));
+
+            question = "Which " + table + " is the most massive?";
+            query = "SELECT name, mass FROM " + table + ";";
+           
+            rs = execQuery(query);
+            
+            double[] masses = new double[4];
+            double maxMass = 0;
+            int index = 0;
+                
+            try {
+                rs.next();
+                for(int i = 0; (i < 4); i++, rs.next()) {
+                    options[i] = rs.getString("name");
+                    masses[i] = rs.getDouble("mass");
+                        
+                    if(masses[i] > maxMass) {
+                        maxMass = masses[i];
+                        index = i;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+                
+            if(options[index] != null) {
+                valid = true;
+            }
+                
+            options[4] = answerChars[index];
+                
+            break;
+                
+        default:
+            break;
         }
     }
     
-    
     /**
-     Generate a random block of answers
-     */
+       Generate a random block of answers
+    */
     public void genAnswers(String c_name, String oClass, String where_clause) {
         String query = "SELECT " + c_name +
-        " FROM " + oClass + where_clause + ";"; // Moved the " WHERE " up when called.
-        //System.out.println("Answer Query: " + query +"\n\n");
+            " FROM " + oClass + where_clause + ";"; // Moved the " WHERE " up when called.
+       
         ResultSet rs = execQuery(query);
         try {
             for(int i = 0; i < 4; i++) {
@@ -164,8 +138,8 @@ public class Query {
     }
     
     /**
-     Get a random object from table
-     */
+       Get a random object from table
+    */
     public String randObject(String table) {
         
         // Find the number of rows in the upcoming result set.
@@ -203,15 +177,15 @@ public class Query {
                 e.printStackTrace();
             }
         }
-        //System.out.println("Randname: " + randName);
+        
     	return randName;
     }
     
     /**
-     Get a random object that orbits a specific type of planetary body
-     */
+       Get a random object that orbits a specific type of planetary body
+    */
     public String randOrbiter(String object, String name) {
-        //System.out.println("Orbiter = " + object);
+        
         if(object.toLowerCase().equals("planet")) {
             
             return "moon";
@@ -219,28 +193,26 @@ public class Query {
         } else {
             int rand = 0;
             if(name.toLowerCase().equals("sun")) {
-                    rand = (int)(Math.random() * 3);
+                rand = (int)(Math.random() * 3);
             } else {
                 rand = (int)(Math.random() * 2);
             }
             switch(rand) {
-                case 0:
-                    return "asteroid";
-                case 1:
-                    return "comet";
-                case 2:
-                    return "planet";
-                default:
-                    System.out.println("randOrbiter, rand = " + rand + "!??!?!!");
-                    return "";
+            case 0:
+                return "asteroid";
+            case 1:
+                return "comet";
+            case 2:
+                return "planet";
+            default:
+                return "";
             }
         }
     }
     
-    
     /**
-     @return Computes the result set for a query
-     */
+       @return Computes the result set for a query
+    */
     public ResultSet execQuery(String query) {
         
         ResultSet result = null;
@@ -258,15 +230,12 @@ public class Query {
         catch(Exception e) {
             e.printStackTrace();
         }
-        return result;
-        
+        return result;    
     }
     
-    
-    
     /**
-     Get list of names for all tables in database
-     */
+       Get list of names for all tables in database
+    */
     public ArrayList<String> getTableNames() {
         ArrayList<String> tables = new ArrayList<String>();
         ResultSet rs = null;
@@ -289,9 +258,6 @@ public class Query {
             e.printStackTrace();
         }
         
-        return tables;
-        
-    }
-    
-    
+        return tables;   
+    }    
 }

@@ -105,9 +105,9 @@ public class AstroQuiz {
         e.getMessage();
       }
       QuestionGenerator generator = new QuestionGenerator();
-      Question[] generatored = generator.makeQuestionBatch(11); //Uses the question generator to make questions
+      Question[] generated = generator.makeQuestionBatch(11); //Uses the question generator to make questions
       for(int i = 5; i < 10; i++){
-        quizQs[i] = generatored[i-5];
+        quizQs[i] = generated[i-5];
       }
             
       quizQs[10] = null;
