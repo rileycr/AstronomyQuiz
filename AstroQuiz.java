@@ -198,8 +198,8 @@ public class AstroQuiz {
                 while(rs2.next()){
                     displayOutput += String.format("%-17s %-17s %s\n", rs2.getString("Planet"), rs2.getString("Orbits"), "0");
                 }
+                
             } else if (table.equals("star")) {
-
                 ResultSet rs1 = execQuery("SELECT Star.name, Star.mass, COUNT(*) AS Planets FROM Star LEFT OUTER JOIN Planet ON Star.name = Planet.orbits GROUP BY Star.name EXCEPT SELECT Star.name, Star.mass, COUNT(*) AS Planets FROM Star LEFT OUTER JOIN Planet ON Star.name = Planet.orbits WHERE Planet.orbits IS NULL GROUP BY Star.name");
                 ResultSet rs2 = execQuery("SELECT Star.name, Star.mass, COUNT(*) AS Planets FROM Star LEFT OUTER JOIN Planet ON Star.name = Planet.orbits WHERE Planet.orbits IS NULL GROUP BY Star.name");
                 
@@ -212,16 +212,30 @@ public class AstroQuiz {
                 while(rs2.next()){
                     displayOutput += String.format("%-17s %-17s %s\n", rs2.getString("name"), rs2.getInt("mass"), "0");
                 }
+                
             } else if (table.equals("moon")) {
+                displayOutput += basicQuery(table);
                 
             } else if (table.equals("asteroid")) {
+                displayOutput += basicQuery(table);
                 
             } else if (table.equals("comet")) {
+                displayOutput += basicQuery(table);
                 
             } else if (table.equals("constellation")) {
-                
+                ResultSet rs = execQuery("SELECT Constellation_name, COUNT(*) AS Stars FROM Made_Of GROUP BY Constellation_name");
+                displayOutput += String.format("%-20s %s\n","Constellation", "#-Stars");
+                while (rs.next()){
+                    displayOutput += String.format("%-20s %s\n", rs.getString("Constellation_name"), rs.getInt("Stars"));
+                }
             } else {
-                
+                ResultSet rs = execQuery("SELECT * FROM Galaxy");
+                displayOutput += String.format("%-12s %-8s %-14s %-16s %s\n", "Name", "Size", "Type", "Distance to M.W.", "Super Cluster");
+
+                while(rs.next()){
+                    displayOutput += String.format("%-12s %-8s %-14s %-16s %s\n", rs.getString("name"), rs.getDouble("size"), rs.getString("type"), rs.getDouble("Distance_from_Milky_Way"), rs.getString("Super_Cluster"));
+
+                }
             }
             
         } catch(Exception e){
@@ -232,29 +246,17 @@ public class AstroQuiz {
     }
 
     /**
-       Generates the query for the extra display
+       Used by moon, asteroid, and comet since they all have
+       the same attributes to display
     */
-    private String generateQuery(String table){
-        String qry = "SELECT ";
-
-        if(table.equals("planet")) {
-            qry += ("Planet.name, Planet.orbits, COUNT(*) AS Moons FROM Planet JOIN Moon ON Planet.name = Moon.orbits GROUP BY Planet.name");
-            
-        } else if (table.equals("star")) {
-            qry += ("Star.name, Star.mass, COUNT(*) AS Planets FROM Star JOIN Planet ON Star.name = Planet.orbits GROUP BY Star.name");
-            
-        } else if (table.equals("moon")) {
-            qry += (" FROM moon");
-        } else if (table.equals("asteroid")) {
-            qry += ("* FROM asteroid");
-        } else if (table.equals("comet")) {
-            qry += ("* FROM comet");
-        } else if (table.equals("constellation")) {
-            qry += ("* FROM constellation");
-        } else {
-            qry += ("* FROM galaxy");
+    private String basicQuery(String table) throws Exception{
+        String returnString = "";
+        ResultSet rs = execQuery("SELECT * FROM "+table);
+        returnString += String.format("%-14s %-15s %-14s %-14s %s\n", "Name", "Mass", "Period", "Eccentricity", "Orbits");
+        while(rs.next()){
+            returnString += String.format("%-14s %-15s %-14s %-14s %s\n", rs.getString("name"), rs.getString("mass"), rs.getDouble("period"), rs.getDouble("eccentricity"), rs.getString("orbits"));
         }
-        return qry;
+        return returnString;
     }
 
     /**

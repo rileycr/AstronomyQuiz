@@ -207,7 +207,7 @@ public class QuizFrame extends JFrame {
        Remaining code draws the GUI
      */
     public void setupGUI(){
-        setSize(new Dimension(600, 430));
+        setSize(new Dimension(700, 430));
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         screenWidth = screenSize.width;
