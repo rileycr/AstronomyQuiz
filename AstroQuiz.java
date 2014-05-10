@@ -21,7 +21,9 @@ public class AstroQuiz {
     private int qCount = 0;  // running count of the question
 
     private static Question[] quizQs = new Question[11];
-    Random random = new Random();
+    
+    private static Random random = new Random();
+    private static QuestionGenerator generator;
     
     /***************************************************************************/
     
@@ -36,6 +38,7 @@ public class AstroQuiz {
         try{
             getPlayerName();
             dbConnect();
+            
             
             createQuestions();
             guiStart();
@@ -71,89 +74,44 @@ public class AstroQuiz {
             e.printStackTrace();
         }
     }
-    /** Randomly selects a question type to generate -MFG*/
-    
-    private Question makeQuestion(){
-        String[] defaultInfo = {"Earth","Moon","Pegasus","Pluto"};
-        Question question;
-        try{
-            switch(random.nextInt(1) + 1) {
-            case 1: question = makeSunOrbitQuestion();
-                break;
-            default: question = new MCQuestion("Which planet orbits the sun?", defaultInfo, "Earth");
-            }
-            return question;
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-            question =  new MCQuestion("Which planet orbits the sun?", defaultInfo, "Earth");
-        }
-        return question;
-    }
-    
-    /** Generates question by querying database */
-    private Question makeSunOrbitQuestion() throws SQLException{
-        String[] defaultInfo = {"Earth","Moon","Pegasus","Pluto"};
-        ResultSet planets = execQuery("SELECT Name FROM Planet");
-        ArrayList<String> planetNames = new ArrayList<String>();
-        do{
-            planetNames.add(planets.getString("Name"));
-        } while (planets.next());
-        String correctPlanet = planetNames.get(random.nextInt(planetNames.size()));
-        String[] questionInfo = new String[4];
-        questionInfo[0] = correctPlanet;
-        int count = 1;
-        while(count < 4){
-            String wrongPlanet = planetNames.get(random.nextInt(planetNames.size()));
-   
-            if(!(wrongPlanet.equals(correctPlanet))){
-                questionInfo[count] = wrongPlanet;
-                count++;
-            }
-        }
-        String query = "SELECT Orbits FROM Planet WHERE Name = \"";
-        String finalQuery = query.concat(correctPlanet);
-        finalQuery = finalQuery.concat("\";");
-        ResultSet starName = execQuery(finalQuery);
-        Collections.shuffle(Arrays.asList(questionInfo));
-        String answerLetter = "";
-        if(questionInfo[0].equals(correctPlanet)){
-            answerLetter = "A";
-        } else if (questionInfo[1].equals(correctPlanet)){
-            answerLetter = "B";
-        } else if (questionInfo[2].equals(correctPlanet)){
-            answerLetter = "C";
-        } else {
-            answerLetter = "D";
-        }
-        
-        return new MCQuestion("Which planet orbits the star \"" + starName.getString("Orbits") + "\"?", questionInfo, answerLetter);
-        //return new MCQuestion("Which planet orbits the sun?", defaultInfo, "Earth");
-    }
-    
+      
     /**
        Currently in testing phase, creates questions to send to the GUI
     */
     private void createQuestions() {
+      
+      int count = 0;
+      while (count < 5) {
+        Query q1 = new Query(count % 2);
         
-        int count = 0;
-        while (count < 10) {
-            Query q1 = new Query(count % 2);
-            
-            // Small database frequently has insufficient information to populate answers
-            while(!q1.valid ||
-                  q1.options[0] == null ||
-                  q1.options[1] == null ||
-                  q1.options[2] == null ||
-                  q1.options[3] == null) {
-                
-                q1 = new Query(count % 2);
-            }
-            quizQs[count] = new MCQuestion(q1.question, q1.options, q1.options[4]);
-            count ++;
+        // Small database frequently has insufficient information to populate answers
+        while(!q1.valid ||
+              q1.options[0] == null ||
+              q1.options[1] == null ||
+              q1.options[2] == null ||
+              q1.options[3] == null) {
+          
+          q1 = new Query(count % 2);
         }
-        
-        quizQs[10] = null;
-
+        quizQs[count] = new MCQuestion(q1.question, q1.options, q1.options[4]);
+        count ++;
+      }
+      
+      try{
+        connection.close();
+      } catch (SQLException e) {
+        System.err.println("Unable to close connection");
+      } catch (Exception e){
+        e.getMessage();
+      }
+      QuestionGenerator generator = new QuestionGenerator();
+      Question[] generatored = generator.makeQuestionBatch(11); //Uses the question generator to make questions
+      for(int i = 5; i < 10; i++){
+        quizQs[i] = generatored[i-5];
+      }
+            
+      quizQs[10] = null;
+      
     }
 
     /**
